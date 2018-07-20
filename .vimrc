@@ -10,7 +10,7 @@
 execute pathogen#infect()
 filetype plugin indent on
 call plug#begin('~/.vim/plugged')
-Plug 'mhinz/vim-startify'
+	Plug 'mhinz/vim-startify'
 call plug#end()
 
 
