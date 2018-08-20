@@ -1,6 +1,3 @@
-# vimrc
-files for my vim config. first thing to do when ssh into a new server. 
-<br>
 ```Vim script
 "
 "      _    __ ____ __  ___   ______ ____   _   __ ______ ____ ______
