@@ -1,4 +1,7 @@
 "
+"
+"
+"
 "      _    __ ____ __  ___   ______ ____   _   __ ______ ____ ______
 "     | |  / //  _//  |/  /  / ____// __ \ / | / // ____//  _// ____/
 "     | | / / / / / /|_/ /  / /    / / / //  |/ // /_    / / / / __
@@ -6,43 +9,94 @@
 "     |___//___//_/  /_/   \____/ \____//_/ |_//_/    /___/ \____/
 "
 "
+"
+"
 "################ Plugins ##################################################
-execute pathogen#infect()
+"execute pathogen#infect()
+
+set nocompatible
+filetype off
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+  "Plugin 'mhinz/vim-startify' FUCK STARTIFY
+  Plugin 'scrooloose/nerdtree'
+  Plugin 'jistr/vim-nerdtree-tabs'
+  Plugin 'Yggdroot/indentLine'
+  Plugin 'pangloss/vim-javascript'
+  Plugin 'haya14busa/incsearch.vim'
+  Plugin 'majutsushi/tagbar'
+  Plugin 'bling/vim-bufferline'
+  Plugin 'vim-airline/vim-airline'
+call vundle#end()
+
+filetype plugin on
 filetype plugin indent on
-call plug#begin('~/.vim/plugged')
-	Plug 'mhinz/vim-startify'
-call plug#end()
+
+"some rules for the layout of this file:
+" - each header must be exactly 76 characters long to maintain legibility in
+"   a 80 column terminal since the number line actually takes up 4 columns
+"
+" - after each section there needs to be a 4 space aesthetic gap
+
 
 
 
 "############## Vim Settings ###############################################
-set mouse=
-set showmode
+autocmd VimResized * redraw!
+"remove any possible artificats caused by corrupted buffer, not really a
+"problem unless using a bloated plugin and sync vim doesnt know how to
+"handle it.
+
+"change the cursor shape (without flickering this time)
+let &t_SI = "\<Esc>[5 q"
+let &t_SR = "\<Esc>[3 q"
+let &t_EI = "\<Esc>[1 q"
+
+":cd ~/Documents/workspace
+set wildmenu
+set backspace=2
+set mouse=a
 set tabstop=4
+set shiftwidth=4
 set softtabstop=4
+set expandtab
 set autoindent
 set cindent
-set shiftwidth=4
+set ignorecase
+set smartcase
+set incsearch
 set cursorline
 set nu
 set nowrap
 set encoding=UTF-8
+set hidden
 set foldcolumn=0
 set foldmethod=indent
 set foldlevelstart=99
-set directory^=$HOME/.vim/tmp//
-"this is where to find swap files
-for prefix in ['i', 'n', 'v']
-	for key in ['<Up>', '<Down>', '<Left>', '<Right>']
-		exe prefix . "noremap " . key . " <Nop>"
-	endfor
-endfor
-"Unbind the cursor keys in insert, normal and visual modes.
+set omnifunc=syntaxcomplete#Complete
 "set relativenumber
 "set showtabline=2
-"set ic
 "set ic is to ignore casing for searches
 "autocmd BufEnter * silent! lcd %:p:h
+
+"this is where to find swap files
+set directory^=$HOME/.vim/tmp//
+
+"change tabstop by file, some files like js and html need 2 spaces
+autocmd FileType css        set tabstop=2|set shiftwidth=2|set softtabstop=2
+autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2
+autocmd FileType html       set tabstop=2|set shiftwidth=2|set softtabstop=2
+
+"Unbind the cursor keys in insert, normal and visual modes.
+for prefix in ['i', 'n', 'v']
+    for key in ['<Up>', '<Down>', '<Left>', '<Right>']
+        exe prefix . "noremap " . key . " <Nop>"
+    endfor
+endfor
+
+"retab everything our war, but keep silent in case modify is off
+autocmd BufEnter * silent! :retab
 
 
 
@@ -51,13 +105,14 @@ endfor
 imap jj <Esc>
 imap JJ <Esc>
 set timeoutlen=350
-"we have to map some keys for the tabs the hidden command allows us to leave a
-"buffer hidden without having to save the buffer
-map <C-K> :set hidden<CR>:bnext<CR>
-map <C-J> :set hidden<CR>:bprevious<CR>
+"we have to map some keys for the tabs the hidden command allows us to
+"leave a buffer hidden without having to save the buffer
+map  <C-L> :bnext<CR>
+map  <C-H> :bprevious<CR>
+nmap <C-C> :BD
 nmap <C-X> :!zsh<CR>
-"nnoremap <C-E> :tabe 
-
+nmap <C-Z> :set hidden<CR>:<C-Z><CR>
+"intentionally remove ctrl-z for suspend jobs
 "custom copy and paste from and to system clipboard
 "this took my so fucking long to get right, you need to
 "install vim-gtk
@@ -68,96 +123,49 @@ vmap <C-c> "+y
 
 
 "################# Eye Candy ###############################################
-"let base16colorspace=256  " Access colors present in 256 colorspace
-set t_Co=256
 syntax enable
-set background=dark
+set t_Co=16
 colorscheme base16-tomorrow-night
-
+set background=dark
+set fillchars+=vert:█
 let python_highlight_all=1
 let g:javascript_plugin_jsdoc=1
 "set showtabline=2
-
-" highlighting for fuzzy file finder (DO NOT CHANGE)
-command! -bang Colors
-  \ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'}, <bang>0)
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Function'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Repeat'],
-  \ 'fg+':     ['fg', 'CursorColumn', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorColumn', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Function'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
-" for other highlighting settings are going to be in the color scheme
 " here we are going to set something to show trailing whitespaces
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
+highlight ExtraWhitespace ctermfg=3 ctermbg=3
 
-
-
-
-"########### Fuzzy File Searcher ###########################################
-set rtp+=~/.fzf
-map <C-F> :set hidden<CR>:FZF ~<CR>
-let g:fzf_action = {
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit' }
-let g:fzf_layout = { 'down': '~30%' }
 
 
 
 "############## NERDTree ###################################################
-nnoremap <C-P> :NERDTreeTabsToggle<CR>
 let g:webdevicons_enable = 0
 let g:webdevicons_enable_airline_statusline = 0 "turn off devicons for status bar
 "let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
 
-"change nerdtree arrow colors
-hi NERDTreeOpenable ctermfg=15
-hi NERDTreeClosable ctermfg=5
-
 let NERDTreeStatusline=''
-let g:NERDTreeWinSize=35
+let g:NERDTreeWinSize=31
 let g:NERDTreeHighlightCursorline = 1
 let g:NERDTreeSyntaxDisableDefaultExtensions = 1
 let g:NERDTreeDisableExactMatchHighlight = 1
 let g:NERDTreeDisablePatternMatchHighlight = 1
-"this piece of code below is extremely important
-"set nocursorline
-"augroup NerdCursor
-"	autocmd!
-"	autocmd WinEnter NERD_tree_* setlocal cursorline
-"	autocmd WinLeave NERD_tree_* setlocal nocursorline
-"	autocmd BufEnter NERD_tree_* setlocal cursorline
-"	autocmd BufLeave NERD_tree_* setlocal nocursorline
-"augroup END
+let g:NERDTreeDirArrowExpandable = '→'
+let g:NERDTreeDirArrowCollapsible = '↓'
+let NERDTreeMinimalUI=1
+hi NERDTreeOpenable ctermfg=8
+hi NERDTreeClosable ctermfg=7
+nnoremap <C-P> :NERDTreeTabsToggle<CR>
 
-"let g:NERDTreeSyntaxEnabledExtensions = ['c', 'h', 'hpp', 'cpp', 'py', 'R', 'html', 'sh', 'mat', 'png', 'img', 'jpg', 'php', 'rb', 'js', 'css', 'txt']
-
-"neobundle
-"set runtimepath+=~/.vim/bundle/neobundle.vim/
-"call neobundle#begin(expand('~/.vim/bundle/'))
-"NeoBundleFetch 'Shougo/neobundle.vim'
-"NeoBundle 'tiagofumo/vim-nerdtree-syntax-highlight'
-"call neobundle#end()
-"filetype plugin indent on
-"NeoBundleCheck
 
 
 
 "################ Vim Airlines #############################################
 function! GitBranch()
-	return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+    return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
 endfunction
 
 "let g:airline#extensions#tabline#enabled = 1
@@ -172,11 +180,137 @@ let g:airline_section_y = '%{&fileencoding?&fileencoding:&encoding} %{&fileforma
 let g:airline_section_z = '%y %l:%c'
 let g:airline_section_warning = ''
 
+let g:airline_symbols = {}
+
+"unicode symbols
+let g:airline_symbols.crypt = ''
+let g:airline_symbols.linenr = '☰'
+let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.maxlinenr = ''
+let g:airline_symbols.maxlinenr = '㏑'
+let g:airline_symbols.branch = ''
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.spell = 'Ꞩ'
+let g:airline_symbols.notexists = 'Ɇ'
+let g:airline_symbols.whitespace = 'Ξ'
+
+"powerline symbols
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = '☰'
+let g:airline_symbols.maxlinenr = ''
+
+let g:airline_exclude_preview = 0 "remove known bug with nerdtree previews
 let g:airline#extensions#default#section_truncate_width = {
-	  \ 'a': 70,   
-      \ 'b': 60,
-      \ 'x': 50,
-      \ 'y': 60,
-      \ 'z': 70,
+      \ 'a': 0,
+      \ 'b': 0,
+      \ 'x': 0,
+      \ 'y': 0,
+      \ 'z': 0,
       \ }
 
+"let g:airline_mode_map = {
+"      \ '__' : '-',
+"      \ 'n' : 'nrm',
+"      \ 'i' : 'ins',
+"      \ 'R' : 'rep',
+"      \ 'c' : 'cmd',
+"      \ 'v' : 'vis',
+"      \ 'V' : 'vis',
+"      \ '^V' : 'vis',
+"      \ 's' : 'sel',
+"      \ 'S' : 's-l',
+"      \ '^S' : 's-b',
+"      \ }
+
+
+
+
+"############# BufferLine ##################################################
+let g:airline#extensions#bufferline#overwrite_variables = 0
+let g:airline#extensions#bufferline#enabled = 1
+let g:bufferline_active_buffer_left = ''
+let g:bufferline_active_buffer_right = ''
+let g:bufferline_modified = '+'
+let g:bufferline_inactive_highlight = 'LineNr'
+let g:bufferline_active_highlight = 'Normal'
+let g:bufferline_solo_highlight = 0
+let g:bufferline_echo = 0
+let g:bufferline_pathshorten = 1
+let g:bufferline_rotate = 0
+let g:bufferline_fname_mod = ':t:r' "carry leaf name and extention, no path
+let g:bufferline_show_bufnr = 1
+
+
+
+
+"############# Indentation Lines ###########################################
+let g:indentLine_setColors = 0 "use conceal highlighting
+let g:indentLine_char = '▏'
+let g:indentLine_conceallevel = 1
+
+
+
+
+"############### Terminal ##################################################
+au TerminalOpen * :setlocal nonu norelativenumber | :AirlineToggle
+au BufLeave * if &buftype == 'terminal' | :AirlineToggle | endif
+au BufEnter * if &buftype == 'terminal' | :AirlineToggle | endif
+"do not use the terminal it's experimental and its currently shit
+
+
+
+
+"#################### INC Search ###########################################
+set hlsearch
+let g:incsearch#auto_nohlsearch = 1
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+"for some more searching goodness
+map n  <Plug>(incsearch-nohl-n)
+map N  <Plug>(incsearch-nohl-N)
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
+
+
+
+
+"###################### Tagbar #############################################
+nmap <F8> :TagbarToggle<CR>
+hi TagbarSignature ctermfg=6 ctermbg=0
+hi TagbarComment ctermfg=1 ctermbg=0
+"hi TagbarKind ctermfg=7 ctermbg=0
+"hi TagbarNestedKind ctermfg=7 ctermbg=0
+"hi TagbarType ctermfg=7 ctermbg=0
+"hi TagbarScope ctermfg=7 ctermbg=0
+"hi TagbarPseudoID ctermfg=7 ctermbg=0
+hi TagbarFoldIcon ctermfg=7 ctermbg=0
+"hi TagbarHighlight ctermfg=7 ctermbg=0
+let g:tagbar_iconchars = ['→ ', '↓ ']
+
+
+
+
+"################# Some Gui Options ########################################
+set guioptions-=m  "remove menu bar
+set guioptions-=T  "remove toolbar
+set guioptions-=r  "remove right-hand scroll bar
+set guioptions-=L  "remove left-hand scroll bar
+set guifont=Dejavu\ Sans\ Mono\ for\ Powerline\ Book\ 10.5
+set guioptions+=lrbmTLce
+set guioptions-=lrbmTLce
+set guioptions+=c
+if has('gui_running')
+    "put some gui settings here (for light paper theme)
+endif
