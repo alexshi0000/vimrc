@@ -1,3 +1,4 @@
+```vim
 "
 "
 "
@@ -317,3 +318,4 @@ set guioptions+=c
 if has('gui_running')
     "put some gui settings here (for light paper theme)
 endif
+```
