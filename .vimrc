@@ -17,6 +17,7 @@
 set nocompatible
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
+"first install vundle in order to use the plugin manager
 call vundle#begin()
   "Plugin 'mhinz/vim-startify' FUCK STARTIFY
   Plugin 'scrooloose/nerdtree'
@@ -44,9 +45,9 @@ filetype plugin indent on
 
 "some rules for the layout of this file:
 " - each header must be exactly 76 characters long to maintain legibility in
-"   a 80 column terminal since the number line actually takes up 4 columns
+"   terminal windows
 "
-" - after each section there needs to be a 4 space aesthetic gap
+" - after each section there needs to be a 4 space gap
 
 
 
@@ -54,8 +55,8 @@ filetype plugin indent on
 "############## Vim Settings ###############################################
 autocmd VimResized * redraw!
 "remove any possible artificats caused by corrupted buffer, not really a
-"problem unless using a bloated plugin and sync vim doesnt know how to
-"handle it.
+"problem unless using a buggy plugin and sync vim causes some screen
+"tearing.
 
 "change the cursor shape (without flickering the screen this time)
 let &t_SI = "\<Esc>[5 q"
@@ -104,7 +105,7 @@ for prefix in ['i', 'n', 'v']
     endfor
 endfor
 
-"retab everything our war, but keep silent in case modify is off
+"retab everything our way, but keep silent if modify is off
 autocmd BufEnter * silent! :retab
 
 
@@ -120,8 +121,9 @@ map  <C-L> :bnext<CR>
 map  <C-H> :bprevious<CR>
 nmap <C-C> :BD!
 nmap <C-X> :!zsh<CR>
+
+"intentionally remove ctrl-z for suspend jobs, can use ctrl-z for tmux meta key
 nmap <C-Z> :set hidden<CR>:<C-Z><CR>
-"intentionally remove ctrl-z for suspend jobs
 "custom copy and paste from and to system clipboard
 "this took my so fucking long to get right, you need to
 "install vim-gtk
@@ -139,7 +141,6 @@ set background=dark
 set fillchars+=vert:▏
 let python_highlight_all=1
 let g:javascript_plugin_jsdoc=1
-"set showtabline=2
 
 " SOME EXTRA HIGHLIGHTING OPTIONS
 " here we are going to set something to show trailing whitespaces
@@ -320,6 +321,8 @@ let g:tagbar_left = 0
 
 "################## Supertab Completion ####################################
 let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+"not to be confused with <c-n> or <c-p> which uses tags from files,
+"directories, etc. Omnicompletion is language-specific
 
 
 
@@ -351,7 +354,7 @@ set guifont=Terminus\ Medium\ 12
 set guioptions+=lrbmTLce
 set guioptions-=lrbmTLce
 set guioptions+=c
-"comment down below for light theme or for gui
+"comment down below for (light theme _____***OR***_____ for gui)
 "if has('gui_running')
   let g:nerdtree_tabs_open_on_gui_startup = 0
   set t_Co=256
