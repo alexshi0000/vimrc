@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	Python
 " Maintainer:	Neil Schemenauer <nas@python.ca>
-" Last Change:	2010 Sep 21
+" Last Change:	2009-10-13
 " Credits:	Zvezdan Petkovic <zpetkovic@acm.org>
 "		Neil Schemenauer <nas@python.ca>
 "		Dmitry Vasiliev
@@ -22,9 +22,7 @@
 "		- corrected synchronization
 "		- more highlighting is ON by default, except
 "		- space error highlighting is OFF by default
-
-"               This file is modified by Devajit Asem with more improved features
-
+"
 " Optional highlighting can be controlled using these variables.
 "
 "   let python_no_builtin_highlight = 1
@@ -36,7 +34,7 @@
 "
 " All the options above can be switched on together.
 "
-" let python_highlight_all = 1
+   let python_highlight_all = 1
 "
 
 " For version 5.x: Clear all syntax items.
@@ -46,11 +44,6 @@ if version < 600
 elseif exists("b:current_syntax")
   finish
 endif
-
-" We need nocompatible mode in order to continue lines with backslashes.
-" Original setting will be restored.
-let s:cpo_save = &cpo
-set cpo&vim
 
 " Keep Python keywords in alphabetical order inside groups for easy
 " comparison with the table in the 'Python Language Reference'
@@ -73,16 +66,26 @@ set cpo&vim
 " - 'print' is a built-in in Python 3.0 and will be highlighted as
 "   built-in below (use 'from __future__ import print_function' in 2.6)
 "
-syn keyword pythonStatement	False, None, True
+syn keyword pythonConstant	False None True
 syn keyword pythonStatement	as assert break continue del exec global
-syn keyword pythonStatement	lambda  nonlocal pass print return with yield
-syn keyword pythonStatement	class def nextgroup=pythonFunction skipwhite
+syn keyword pythonStatement	lambda nonlocal pass print return with yield
+syn keyword pythonStatement	def nextgroup=pythonFunction skipwhite
+syn keyword pythonStatement class nextgroup=pythonClass skipwhite
 syn keyword pythonConditional	elif else if
 syn keyword pythonRepeat	for while
-syn keyword pythonOperator	and in is not or PyQt4 QtCore QtGui QtWebKit
-syn keyword pythonException	except import self __future__ finally raise try 
-syn keyword pythonInclude	from  
+syn keyword pythonOperator	and in is not or
+syn keyword pythonException	except finally raise try
+syn keyword pythonInclude	from import
 
+" NOTE: @pfdevilliers added this
+" I copied this directly from the ruby.vim syntax file inorder to highlight all
+" the operators. This must offcourse be revised to only contain the operators
+" that exists in python.
+syn match  pythonExtraOperator	 "\%([~!^&|*/%+-]\|\%(class\s*\)\@<!<<\|<=>\|<=\|\%(<\|\<class\s\+\u\w*\s*\)\@<!<[^<]\@=\|===\|==\|=\~\|>>\|>=\|=\@<!>\|\*\*\|\.\.\.\|\.\.\|::\|=\)"
+syn match  pythonExtraPseudoOperator  "\%(-=\|/=\|\*\*=\|\*=\|&&=\|&=\|&&\|||=\||=\|||\|%=\|+=\|!\~\|!=\)"
+
+
+"syn region pythonClass start="(" end=")" contains=pythonParameters skipwhite transparent
 " Decorators (new in Python 2.4)
 syn match   pythonDecorator	"@" display nextgroup=pythonFunction skipwhite
 " The zero-length non-grouping match before the function name is
@@ -91,11 +94,34 @@ syn match   pythonDecorator	"@" display nextgroup=pythonFunction skipwhite
 " doctests.
 " A dot must be allowed because of @MyClass.myfunc decorators.
 
-syn match   pythonFunction "\%(\%(def\s\|class\s\|@\)\s*\)\@<=\h\%(\w\|\.\)*" contained
+" NOTE: @pfdevilliers added this
+" This was added based on the guidelines from Stackoverflow.
+" http://stackoverflow.com/questions/8312132/vim-editing-the-python-vim-syntax-file-to-highlight-like-textmate
+" It is really a hack job ignoring best practices. I royally screwed up the
+" regular expressions which led to the definition of the pythonBrackets. 
+" This should be improved and simplified.
+syn match   pythonFunction
+      \ "\%(\%(def\s\|class\s\|@\)\s*\)\@<=\h\%(\w\|\.\)*" contained nextgroup=pythonVars
+" NOTE: @Kamushin fix this
+"    @mock(a=["(aa)"])
+"    def foo(self, str_a='aaa()aaa):')
+syn region pythonVars start="(" end="):*\n" contained contains=pythonParameters transparent keepend
+syn match pythonParameters "[^,:]*" contained contains=pythonParam,pythonBrackets skipwhite
+syn match pythonParam "=[^,]*" contained contains=pythonExtraOperator,pythonBuiltin,pythonConstant,pythonStatement,pythonNumber,pythonString skipwhite
+syn match pythonBrackets "[(|)]" contained skipwhite
+
+" NOTE: @pfdevilliers added this
+" The same as the previous definitions but for the python class.
+syn match   pythonClass
+      \ "\%(\%(def\s\|class\s\|@\)\s*\)\@<=\h\%(\w\|\.\)*" contained nextgroup=pythonClassVars
+syn region pythonClassVars start="(" end=")" contained contains=pythonClassParameters transparent keepend
+syn match pythonClassParameters "[^,]*" contained contains=pythonBuiltin,pythonBrackets skipwhite
+
+
 
 syn match   pythonComment	"#.*$" contains=pythonTodo,@Spell
 syn keyword pythonTodo		FIXME NOTE NOTES TODO XXX contained
-syn match  object "..*$()" contained
+
 " Triple-quoted strings can contain doctests.
 syn region  pythonString
       \ start=+[uU]\=\z(['"]\)+ end="\z1" skip="\\\\\|\\\z1"
@@ -117,8 +143,6 @@ syn match   pythonEscape	"\%(\\u\x\{4}\|\\U\x\{8}\)" contained
 " Python allows case-insensitive Unicode IDs: http://www.unicode.org/charts/
 syn match   pythonEscape	"\\N{\a\+\%(\s\a\+\)*}" contained
 syn match   pythonEscape	"\\$"
-syn match Braces display '[{}()\[\]\;\:\,\.\=\-\_\+\*\%\&&\||\&]'
-syn match Ckey   display '[<<\>>]'
 
 if exists("python_highlight_all")
   if exists("python_no_builtin_highlight")
@@ -176,16 +200,16 @@ endif
 if !exists("python_no_builtin_highlight")
   " built-in constants
   " 'False', 'True', and 'None' are also reserved words in Python 3.0
-  syn keyword pythonBuiltin	False True None
-  syn keyword pythonBuiltin	NotImplemented Ellipsis __debug__
+  syn keyword pythonConstant	False True None
+  syn keyword pythonConstant	NotImplemented Ellipsis __debug__
   " built-in functions
-  syn keyword pythonBuiltin	abs all any bin len log bool chr classmethod
+  syn keyword pythonBuiltin	abs all any bin bool chr classmethod
   syn keyword pythonBuiltin	compile complex delattr dict dir divmod
-  syn keyword pythonBuiltin	enumerate eval filter float format sqrt ceil floor round
+  syn keyword pythonBuiltin	enumerate eval filter float format
   syn keyword pythonBuiltin	frozenset getattr globals hasattr hash
-  syn keyword pythonBuiltin	help hex id input int isinstance strip rstrip end
+  syn keyword pythonBuiltin	help hex id input int isinstance
   syn keyword pythonBuiltin	issubclass iter len list locals map max
-  syn keyword pythonBuiltin	min next object oct open ord pow print 
+  syn keyword pythonBuiltin	min next object oct open ord pow print
   syn keyword pythonBuiltin	property range repr reversed round set
   syn keyword pythonBuiltin	setattr slice sorted staticmethod str
   syn keyword pythonBuiltin	sum super tuple type vars zip __import__
@@ -197,8 +221,6 @@ if !exists("python_no_builtin_highlight")
   syn keyword pythonBuiltin	ascii bytearray bytes exec memoryview
   " non-essential built-in functions; Python 2.6 only
   syn keyword pythonBuiltin	apply buffer coerce intern
-  "python PyQt4 builtin"
-  syn keyword pythonBuiltin PyQt4 QtCore QtGui
 endif
 
 " From the 'Python Library Reference' class hierarchy at the bottom.
@@ -236,7 +258,6 @@ if exists("python_space_error_highlight")
   " mixed tabs and spaces
   syn match   pythonSpaceError	display " \+\t"
   syn match   pythonSpaceError	display "\t\+ "
-  syn match   pythonSpaceError  display "+ , = "
 endif
 
 " Do not spell doctests inside strings.
@@ -269,27 +290,41 @@ if version >= 508 || !exists("did_python_syn_inits")
   endif
 
   " The default highlight links.  Can be overridden later.
-  HiLink pythonStatement	Statement
+  "
+  " NOTE: @pfdevilliers added this
+  " I added some colors here but i'm not sure if it is the correct place to
+  " override it.
+  "
+  " HiLink pythonStatement	Statement
+  HiLink pythonConstant  Constant
+  HiLink pythonStatement  Structure
   HiLink pythonConditional	Conditional
   HiLink pythonRepeat		Repeat
   HiLink pythonOperator		Operator
   HiLink pythonException	Exception
-  HiLink pythonInclude		Include
+  "HiLink pythonInclude		Include
+  HiLink pythonInclude  Operator
   HiLink pythonDecorator	Define
-  HiLink Braces       Arithmetics
-  HiLink Ckey         Ckeys
   HiLink pythonFunction		Function
   HiLink pythonComment		Comment
   HiLink pythonTodo		Todo
   HiLink pythonString		String
   HiLink pythonRawString	String
   HiLink pythonEscape		Special
-  HiLink object             Exception
+  HiLink pythonExtraOperator Operator
+  HiLink pythonExtraPseudoOperator Operator
+  HiLink pythonClass Normal
+  HiLink pythonParameters Identifier
+  HiLink pythonParam Normal
+  HiLink pythonBrackets Normal
+  HiLink pythonClassParameters InheritUnderlined
+
   if !exists("python_no_number_highlight")
     HiLink pythonNumber		Number
   endif
   if !exists("python_no_builtin_highlight")
-    HiLink pythonBuiltin	Function
+    "HiLink pythonBuiltin	Function
+    HiLink pythonBuiltin Builtin
   endif
   if !exists("python_no_exception_highlight")
     HiLink pythonExceptions	Structure
@@ -307,7 +342,6 @@ endif
 
 let b:current_syntax = "python"
 
-let &cpo = s:cpo_save
-unlet s:cpo_save
-
+syntax match PythonArg /(.*\,\s*\zs\w\+\ze\s*=.*)/
+hi PythonArg ctermfg=yellow
 " vim:set sw=2 sts=2 ts=8 noet:

@@ -16,7 +16,6 @@
 
 set nocompatible
 filetype off
-
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
   "Plugin 'mhinz/vim-startify' FUCK STARTIFY
@@ -28,6 +27,16 @@ call vundle#begin()
   Plugin 'majutsushi/tagbar'
   Plugin 'bling/vim-bufferline'
   Plugin 'vim-airline/vim-airline'
+  Plugin 'vim-airline/vim-airline-themes'
+  Plugin 'qpkorr/vim-bufkill'
+  Plugin 'itchyny/vim-gitbranch'
+  Plugin 'ryanoasis/vim-devicons'
+  Plugin 'ervandew/supertab'
+  Plugin 'octol/vim-cpp-enhanced-highlight'
+  Plugin 'kh3phr3n/python-syntax'
+  Plugin 'NLKNguyen/papercolor-theme'
+  Plugin 'Shougo/vimproc.vim'
+  Plugin 'Shougo/vimshell.vim'
 call vundle#end()
 
 filetype plugin on
@@ -48,7 +57,7 @@ autocmd VimResized * redraw!
 "problem unless using a bloated plugin and sync vim doesnt know how to
 "handle it.
 
-"change the cursor shape (without flickering this time)
+"change the cursor shape (without flickering the screen this time)
 let &t_SI = "\<Esc>[5 q"
 let &t_SR = "\<Esc>[3 q"
 let &t_EI = "\<Esc>[1 q"
@@ -109,7 +118,7 @@ set timeoutlen=350
 "leave a buffer hidden without having to save the buffer
 map  <C-L> :bnext<CR>
 map  <C-H> :bprevious<CR>
-nmap <C-C> :BD
+nmap <C-C> :BD!
 nmap <C-X> :!zsh<CR>
 nmap <C-Z> :set hidden<CR>:<C-Z><CR>
 "intentionally remove ctrl-z for suspend jobs
@@ -122,15 +131,17 @@ vmap <C-c> "+y
 
 
 
-"################# Eye Candy ###############################################
-syntax enable
+"################# Eye Candy + Syntax Highlighting #########################
+syntax on
 set t_Co=16
 colorscheme base16-tomorrow-night
 set background=dark
-set fillchars+=vert:█
+set fillchars+=vert:▏
 let python_highlight_all=1
 let g:javascript_plugin_jsdoc=1
 "set showtabline=2
+
+" SOME EXTRA HIGHLIGHTING OPTIONS
 " here we are going to set something to show trailing whitespaces
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
@@ -148,7 +159,7 @@ let g:webdevicons_enable_airline_statusline = 0 "turn off devicons for status ba
 "let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
 
 let NERDTreeStatusline=''
-let g:NERDTreeWinSize=31
+let g:NERDTreeWinSize=28
 let g:NERDTreeHighlightCursorline = 1
 let g:NERDTreeSyntaxDisableDefaultExtensions = 1
 let g:NERDTreeDisableExactMatchHighlight = 1
@@ -168,8 +179,8 @@ function! GitBranch()
     return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
 endfunction
 
-"let g:airline#extensions#tabline#enabled = 1
-"let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
 "instead of the above we will simply use :ls and then :b <buffername>
 let g:airline_powerline_fonts = 1
 let g:airline_theme='base16_tomorrow'
@@ -236,7 +247,7 @@ let g:airline#extensions#default#section_truncate_width = {
 
 "############# BufferLine ##################################################
 let g:airline#extensions#bufferline#overwrite_variables = 0
-let g:airline#extensions#bufferline#enabled = 1
+let g:airline#extensions#bufferline#enabled = 0 "set to 1 in order to enable
 let g:bufferline_active_buffer_left = ''
 let g:bufferline_active_buffer_right = ''
 let g:bufferline_modified = '+'
@@ -246,8 +257,8 @@ let g:bufferline_solo_highlight = 0
 let g:bufferline_echo = 0
 let g:bufferline_pathshorten = 1
 let g:bufferline_rotate = 0
-let g:bufferline_fname_mod = ':t:r' "carry leaf name and extention, no path
-let g:bufferline_show_bufnr = 1
+let g:bufferline_fname_mod = ':t' "carry leaf name and extention, no path
+let g:bufferline_show_bufnr = 0
 
 
 
@@ -261,9 +272,9 @@ let g:indentLine_conceallevel = 1
 
 
 "############### Terminal ##################################################
-au TerminalOpen * :setlocal nonu norelativenumber | :AirlineToggle
-au BufLeave * if &buftype == 'terminal' | :AirlineToggle | endif
-au BufEnter * if &buftype == 'terminal' | :AirlineToggle | endif
+"au TerminalOpen * :setlocal nonu norelativenumber | :AirlineToggle
+"au BufLeave * if &buftype == 'terminal' | :AirlineToggle | endif
+"au BufEnter * if &buftype == 'terminal' | :AirlineToggle | endif
 "do not use the terminal it's experimental and its currently shit
 
 
@@ -287,7 +298,10 @@ map g# <Plug>(incsearch-nohl-g#)
 
 
 "###################### Tagbar #############################################
-nmap <F8> :TagbarToggle<CR>
+nmap <F8> :TagbarToggle<CR> :AirlineRefresh<CR>
+"the vim airline was broken at the beginning, but I realized after a window
+"resize the problems when away, so I set up this airline refresh command for
+"tagbar toggle
 hi TagbarSignature ctermfg=6 ctermbg=0
 hi TagbarComment ctermfg=1 ctermbg=0
 "hi TagbarKind ctermfg=7 ctermbg=0
@@ -298,6 +312,32 @@ hi TagbarComment ctermfg=1 ctermbg=0
 hi TagbarFoldIcon ctermfg=7 ctermbg=0
 "hi TagbarHighlight ctermfg=7 ctermbg=0
 let g:tagbar_iconchars = ['→ ', '↓ ']
+let g:tagbar_left = 0
+"let g:tagbar_width = 31
+
+
+
+
+"################## Supertab Completion ####################################
+let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+
+
+
+
+"#################### C / C++ syntax #######################################
+let g:cpp_class_scope_highlight = 1
+let g:cpp_class_decl_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_concepts_highlight = 1
+let c_no_curly_error=1
+
+
+
+
+"################### VimShell ##############################################
+let g:vimshell_prompt = 'Enter a shell command:'
+let g:vimshell_use_terminal_command = 'urxvt'
+"let g:vimshell_vimshrc_path = '~/.zshrc'
 
 
 
@@ -307,10 +347,23 @@ set guioptions-=m  "remove menu bar
 set guioptions-=T  "remove toolbar
 set guioptions-=r  "remove right-hand scroll bar
 set guioptions-=L  "remove left-hand scroll bar
-set guifont=Dejavu\ Sans\ Mono\ for\ Powerline\ Book\ 10.5
+set guifont=Terminus\ Medium\ 12
 set guioptions+=lrbmTLce
 set guioptions-=lrbmTLce
 set guioptions+=c
-if has('gui_running')
-    "put some gui settings here (for light paper theme)
-endif
+"comment down below for light theme or for gui
+"if has('gui_running')
+  let g:nerdtree_tabs_open_on_gui_startup = 0
+  set t_Co=256
+
+  set background=light
+  colorscheme PaperColor
+  let g:airline_theme='papercolor'
+
+  nnoremap <C-P> :NERDTreeTabsToggle<CR> :redraw!<CR>
+  highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=226 ctermbg=226
+
+  let g:airline#extensions#bufferline#enabled = 0
+  let g:airline#extensions#tabline#enabled = 1
+  let g:airline#extensions#tabline#fnamemod = ':t'
+"endif
