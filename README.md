@@ -20,7 +20,7 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 "first install vundle in order to use the plugin manager
 call vundle#begin()
-  "Plugin 'mhinz/vim-startify' FUCK STARTIFY
+  "Plugin 'mhinz/vim-startify'
   Plugin 'scrooloose/nerdtree'
   Plugin 'jistr/vim-nerdtree-tabs'
   Plugin 'Yggdroot/indentLine'
