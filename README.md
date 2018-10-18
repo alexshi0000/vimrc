@@ -20,10 +20,8 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 "first install vundle in order to use the plugin manager
 call vundle#begin()
-  "Plugin 'mhinz/vim-startify'
   Plugin 'scrooloose/nerdtree'
   Plugin 'jistr/vim-nerdtree-tabs'
-  Plugin 'Yggdroot/indentLine'
   Plugin 'pangloss/vim-javascript'
   Plugin 'haya14busa/incsearch.vim'
   Plugin 'majutsushi/tagbar'
@@ -34,11 +32,9 @@ call vundle#begin()
   Plugin 'itchyny/vim-gitbranch'
   Plugin 'ryanoasis/vim-devicons'
   Plugin 'ervandew/supertab'
-  Plugin 'octol/vim-cpp-enhanced-highlight'
   Plugin 'kh3phr3n/python-syntax'
   Plugin 'NLKNguyen/papercolor-theme'
-  Plugin 'Shougo/vimproc.vim'
-  Plugin 'Shougo/vimshell.vim'
+  Plugin 'lervag/vimtex'
 call vundle#end()
 
 filetype plugin on
@@ -85,6 +81,8 @@ set hidden
 set foldcolumn=0
 set foldmethod=indent
 set foldlevelstart=99
+set colorcolumn=80
+let &colorcolumn=join(range(81,999),",")
 set omnifunc=syntaxcomplete#Complete
 "set relativenumber
 "set showtabline=2
@@ -99,12 +97,19 @@ autocmd FileType css        set tabstop=2|set shiftwidth=2|set softtabstop=2
 autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2
 autocmd FileType html       set tabstop=2|set shiftwidth=2|set softtabstop=2
 
+autocmd FileType java       set tabstop=4|set shiftwidth=4|set softtabstop=4
+autocmd FileType python     set tabstop=4|set shiftwidth=4|set softtabstop=4
+
+autocmd FileType c          set tabstop=8|set shiftwidth=8|set softtabstop=8
+autocmd FileType cpp        set tabstop=8|set shiftwidth=8|set softtabstop=8
+autocmd FileType cuda       set tabstop=8|set shiftwidth=8|set softtabstop=8
+
 "Unbind the cursor keys in insert, normal and visual modes.
-for prefix in ['i', 'n', 'v']
-    for key in ['<Up>', '<Down>', '<Left>', '<Right>']
-        exe prefix . "noremap " . key . " <Nop>"
-    endfor
-endfor
+"for prefix in ['i', 'n', 'v']
+"    for key in ['<Up>', '<Down>', '<Left>', '<Right>']
+"        exe prefix . "noremap " . key . " <Nop>"
+"    endfor
+"endfor
 
 "retab everything our way, but keep silent if modify is off
 autocmd BufEnter * silent! :retab
@@ -139,7 +144,7 @@ syntax on
 set t_Co=16
 colorscheme base16-tomorrow-night
 set background=dark
-set fillchars+=vert:▏
+"set fillchars+=vert:▏
 let python_highlight_all=1
 let g:javascript_plugin_jsdoc=1
 
@@ -166,8 +171,8 @@ let g:NERDTreeHighlightCursorline = 1
 let g:NERDTreeSyntaxDisableDefaultExtensions = 1
 let g:NERDTreeDisableExactMatchHighlight = 1
 let g:NERDTreeDisablePatternMatchHighlight = 1
-let g:NERDTreeDirArrowExpandable = '→'
-let g:NERDTreeDirArrowCollapsible = '↓'
+let g:NERDTreeDirArrowExpandable = '~'
+let g:NERDTreeDirArrowCollapsible = '+'
 let NERDTreeMinimalUI=1
 hi NERDTreeOpenable ctermfg=8
 hi NERDTreeClosable ctermfg=7
@@ -187,7 +192,7 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline_powerline_fonts = 1
 let g:airline_theme='base16_tomorrow'
 let g:airline_section_b = ' %{gitbranch#name()}'
-let g:airlien_section_c = ''
+let g:airline_section_c = ''
 let g:airline_section_x = ''
 let g:airline_section_y = '%{&fileencoding?&fileencoding:&encoding} %{&fileformat}'
 let g:airline_section_z = '%y %l:%c'
@@ -249,7 +254,7 @@ let g:airline#extensions#default#section_truncate_width = {
 
 "############# BufferLine ##################################################
 let g:airline#extensions#bufferline#overwrite_variables = 0
-let g:airline#extensions#bufferline#enabled = 0 "set to 1 in order to enable
+let g:airline#extensions#bufferline#enabled = 1 "set to 1 in order to enable
 let g:bufferline_active_buffer_left = ''
 let g:bufferline_active_buffer_right = ''
 let g:bufferline_modified = '+'
@@ -261,14 +266,6 @@ let g:bufferline_pathshorten = 1
 let g:bufferline_rotate = 0
 let g:bufferline_fname_mod = ':t' "carry leaf name and extention, no path
 let g:bufferline_show_bufnr = 0
-
-
-
-
-"############# Indentation Lines ###########################################
-let g:indentLine_setColors = 0 "use conceal highlighting
-let g:indentLine_char = '▏'
-let g:indentLine_conceallevel = 1
 
 
 
@@ -313,7 +310,7 @@ hi TagbarComment ctermfg=1 ctermbg=0
 "hi TagbarPseudoID ctermfg=7 ctermbg=0
 hi TagbarFoldIcon ctermfg=7 ctermbg=0
 "hi TagbarHighlight ctermfg=7 ctermbg=0
-let g:tagbar_iconchars = ['→ ', '↓ ']
+let g:tagbar_iconchars = ['~ ', '+ ']
 let g:tagbar_left = 0
 "let g:tagbar_width = 31
 
@@ -324,16 +321,6 @@ let g:tagbar_left = 0
 let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 "not to be confused with <c-n> or <c-p> which uses tags from files,
 "directories, etc. Omnicompletion is language-specific
-
-
-
-
-"#################### C / C++ syntax #######################################
-let g:cpp_class_scope_highlight = 1
-let g:cpp_class_decl_highlight = 1
-let g:cpp_member_variable_highlight = 1
-let g:cpp_concepts_highlight = 1
-let c_no_curly_error=1
 
 
 
@@ -356,13 +343,14 @@ set guioptions+=lrbmTLce
 set guioptions-=lrbmTLce
 set guioptions+=c
 "comment down below for (light theme _____***OR***_____ for gui)
-"if has('gui_running')
+function LightTheme()
   let g:nerdtree_tabs_open_on_gui_startup = 0
   set t_Co=256
 
   set background=light
   colorscheme PaperColor
   let g:airline_theme='papercolor'
+  ":AirlineTheme papercolor turn this off for defaults
 
   nnoremap <C-P> :NERDTreeTabsToggle<CR> :redraw!<CR>
   highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=226 ctermbg=226
@@ -370,5 +358,17 @@ set guioptions+=c
   let g:airline#extensions#bufferline#enabled = 0
   let g:airline#extensions#tabline#enabled = 1
   let g:airline#extensions#tabline#fnamemod = ':t'
-"endif
+endfunction
+
+function DarkTheme()
+    set background=dark
+    :colorscheme happy_hacking
+    let g:airline_theme='angr'
+    set fillchars+=vert:█
+    hi cursorline ctermfg=none ctermbg=none cterm=none
+    hi MatchParen ctermfg=none ctermbg=none cterm=underline
+    highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=221 ctermbg=221
+endfunction
+
+:call DarkTheme()
 ```
