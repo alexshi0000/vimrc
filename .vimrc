@@ -349,7 +349,7 @@ function LightTheme()
   set background=light
   colorscheme PaperColor
   let g:airline_theme='papercolor'
-  ":AirlineTheme papercolor turn this off for defaults
+  :AirlineTheme papercolor "turn this off if papercolor is by default
 
   nnoremap <C-P> :NERDTreeTabsToggle<CR> :redraw!<CR>
   highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=226 ctermbg=226
