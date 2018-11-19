@@ -59,15 +59,15 @@ call s:HL('DiffDelete',                     s:gray3,    s:red,      'none')
 call s:HL('DiffText',                       s:gray3,    s:blue,     'none')
 call s:HL('ErrorMsg',                       s:red,      s:gray1,    'bold')
 call s:HL('VertSplit',                      s:gray4,    s:gray4,    'none')
-call s:HL('Folded',                         s:gray5,     s:gray2,    '')
+call s:HL('Folded',                         s:gray5,     s:gray4,    '')
 call s:HL('FoldColumn',                     s:pink,     s:gray2,    '')
 call s:HL('SignColumn',                     s:gray2,    s:gray1,    '')
-call s:HL('LineNr',                         s:gray4,    s:gray2,         '')
+call s:HL('LineNr',                         s:gray4,    s:gray1,         '')
 call s:HL('CursorLineNr',                   s:gray5,    s:gray2,    'none')
 call s:HL('MatchParen',                     'none',     'none',     'underline')
 call s:HL('ModeMsg',                        s:green,    '',         '')
 call s:HL('MoreMsg',                        s:green,    '',         '')
-call s:HL('NonText',                        s:gray4,    '',         '')
+call s:HL('NonText',                        s:gray4,    s:gray1,         '')
 call s:HL('Normal',                         s:gray5,    s:gray1,    'none')
 call s:HL('Pmenu',                          s:gray5,    s:gray3,    '')
 call s:HL('PmenuSel',                       s:gray2,    s:blue,     '')
@@ -153,8 +153,8 @@ hi link gitcommitUnmergedArrow  gitcommitUnmergedFile
 
 " HTML
 call s:HL('htmlArg',                        s:orange,   '',         '')
-call s:HL('htmlEndTag',                     s:green,   '',         '')
-call s:HL('htmlTag',                        s:green,   '',         '')
+call s:HL('htmlEndTag',                     s:purple,   '',         '')
+call s:HL('htmlTag',                        s:purple,   '',         '')
 call s:HL('htmlTagName',                    s:blue,     '',         '')
 call s:HL('htmlTitle',                      s:gray5,    '',         '')
 
@@ -190,7 +190,7 @@ call s:HL('SignifySignDelete',              s:red,      '',         '')
 
 if has("nvim") && exists("&termguicolors") && &termguicolors
     let g:terminal_color_0  = "#1b202a"
-    let g:terminal_color_8  = "#232936"
+    let g:terminal_color_8  = "#51617D"
     let g:terminal_color_1  = "#b15e7c"
     let g:terminal_color_9  = "#b3785d"
     let g:terminal_color_2  = "#709d6c"
@@ -202,7 +202,7 @@ if has("nvim") && exists("&termguicolors") && &termguicolors
     let g:terminal_color_5  = "#8f72bf"
     let g:terminal_color_13 = "#c47ebd"
     let g:terminal_color_6  = "#56adb7"
-    let g:terminal_color_14 = "#51617d"
+    let g:terminal_color_14 = "#8f72bf"
     let g:terminal_color_7  = "#323c4d"
     let g:terminal_color_15 = "#9aa7bd"
 endif
