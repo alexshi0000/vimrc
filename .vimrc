@@ -349,7 +349,7 @@ function LightTheme()
   set background=light
   colorscheme PaperColor
   let g:airline_theme='papercolor'
-  ":AirlineTheme papercolor turn this off for defaults
+  :silent! AirlineTheme papercolor "turn this off if papercolor is by default
 
   nnoremap <C-P> :NERDTreeTabsToggle<CR> :redraw!<CR>
   highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=226 ctermbg=226
@@ -363,7 +363,8 @@ function DarkTheme()
     set background=dark
     :colorscheme happy_hacking
     let g:airline_theme='angr'
-    set fillchars+=vert:█
+    :silent! set fillchars+=vert:█
+    :silent! AirlineTheme angr
     hi cursorline ctermfg=none ctermbg=none cterm=none
     hi MatchParen ctermfg=none ctermbg=none cterm=underline
     highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=221 ctermbg=221
