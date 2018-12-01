@@ -29,6 +29,7 @@ call vundle#begin()
   Plugin 'kh3phr3n/python-syntax'
   Plugin 'NLKNguyen/papercolor-theme'
   Plugin 'ap/vim-buftabline'
+  Plugin 'majutsushi/tagbar'
 call vundle#end()
 
 filetype plugin on
@@ -133,7 +134,7 @@ set timeoutlen=350
 map  <C-L> :bnext<CR>
 map  <C-H> :bprevious<CR>
 nmap <C-C> :BD!
-nmap <C-X> :term<CR>i
+nmap <C-X> :below split<Return>:resize 15<Return>:term<CR>i
 
 "intentionally remove ctrl-z for suspend jobs, can use ctrl-z for tmux meta key
 nmap <C-Z> :set hidden<CR>:<C-Z><CR>
@@ -142,6 +143,7 @@ nmap <C-Z> :set hidden<CR>:<C-Z><CR>
 "install vim-gtk
 nmap <C-v> "+p
 vmap <C-c> "+y
+nmap <F8> :TagbarToggle<CR>
 
 
 
@@ -154,6 +156,7 @@ set background=dark
 set fillchars+=vert:▎
 let python_highlight_all=1
 let g:javascript_plugin_jsdoc=1
+let g:tagbar_iconchars = ['~ ', '+ ']
 
 " SOME EXTRA HIGHLIGHTING OPTIONS
 " here we are going to set something to show trailing whitespaces
@@ -183,7 +186,7 @@ let g:webdevicons_enable = 0
 let g:webdevicons_enable_airline_statusline = 0 "turn off devicons for status bar
 "let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
 let NERDTreeStatusline=''
-let g:NERDTreeWinSize=35
+let g:NERDTreeWinSize=31
 let g:NERDTreeHighlightCursorline = 1
 let g:NERDTreeSyntaxDisableDefaultExtensions = 1
 let g:NERDTreeDisableExactMatchHighlight = 1
@@ -193,7 +196,7 @@ let g:NERDTreeDirArrowCollapsible = '+'
 let NERDTreeMinimalUI=1
 hi NERDTreeOpenable guifg=#41516a
 hi NERDTreeClosable guifg=#9aa7bd
-nnoremap <C-P> :NERDTreeToggle<CR>
+nnoremap <C-P> :NERDTreeToggle <CR>
 
 
 
