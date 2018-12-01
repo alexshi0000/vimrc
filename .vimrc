@@ -34,6 +34,7 @@ call vundle#begin()
   Plugin 'kh3phr3n/python-syntax'
   Plugin 'NLKNguyen/papercolor-theme'
   Plugin 'lervag/vimtex'
+  Plugin 'octol/vim-cpp-enhanced-highlight'
 call vundle#end()
 
 filetype plugin on
@@ -175,7 +176,7 @@ let g:NERDTreeDirArrowCollapsible = '+'
 let NERDTreeMinimalUI=1
 hi NERDTreeOpenable ctermfg=8
 hi NERDTreeClosable ctermfg=7
-nnoremap <C-P> :NERDTreeTabsToggle<CR>
+nnoremap <C-P> :NERDTreeToggle <CR>
 
 
 
@@ -332,6 +333,15 @@ let g:vimshell_use_terminal_command = 'urxvt'
 
 
 
+"################## C++ highlighting #######################################
+let g:cpp_class_scope_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+let g:cpp_concepts_highlight = 1
+
+
+
+
 "################# Some Gui Options ########################################
 set guioptions-=m  "remove menu bar
 set guioptions-=T  "remove toolbar
@@ -361,11 +371,15 @@ endfunction
 
 function DarkTheme()
     set background=dark
-    :colorscheme happy_hacking
+    colorscheme happy_hacking
+    :syntax on
     let g:airline_theme='angr'
     :silent! set fillchars+=vert:█
     :silent! AirlineTheme angr
-    hi cursorline ctermfg=none ctermbg=none cterm=none
+    "specifically this is for happy hacking
+    hi cursorline ctermfg=none ctermbg=236 cterm=none
+    hi Title ctermfg=107
+    hi cursorlinenr ctermfg=yellow ctermbg=236
     hi MatchParen ctermfg=none ctermbg=none cterm=underline
     highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=221 ctermbg=221
 endfunction
