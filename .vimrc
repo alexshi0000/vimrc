@@ -34,7 +34,6 @@ call vundle#begin()
   Plugin 'kh3phr3n/python-syntax'
   Plugin 'NLKNguyen/papercolor-theme'
   Plugin 'lervag/vimtex'
-  Plugin 'octol/vim-cpp-enhanced-highlight'
 call vundle#end()
 
 filetype plugin on
@@ -75,7 +74,7 @@ set smartcase
 set incsearch
 set cursorline
 set nu
-set nowrap
+set wrap
 set encoding=UTF-8
 set hidden
 set foldcolumn=0
@@ -84,6 +83,13 @@ set foldlevelstart=99
 set colorcolumn=80
 let &colorcolumn=join(range(81,999),",")
 set omnifunc=syntaxcomplete#Complete
+
+"keep cursor in the exact same location when leaving or entering buffers
+if v:version >= 700
+  au BufLeave * let b:winview = winsaveview()
+  au BufEnter * if(exists('b:winview')) | call winrestview(b:winview) | endif
+endif
+
 "set relativenumber
 "set showtabline=2
 "set ic is to ignore casing for searches
@@ -120,6 +126,7 @@ autocmd BufEnter * silent! :retab
 "################# Key Mappings ############################################
 imap jj <Esc>
 imap JJ <Esc>
+
 set timeoutlen=350
 "we have to map some keys for the tabs the hidden command allows us to
 "leave a buffer hidden without having to save the buffer
@@ -333,15 +340,6 @@ let g:vimshell_use_terminal_command = 'urxvt'
 
 
 
-"################## C++ highlighting #######################################
-let g:cpp_class_scope_highlight = 1
-let g:cpp_member_variable_highlight = 1
-let g:cpp_class_decl_highlight = 1
-let g:cpp_concepts_highlight = 1
-
-
-
-
 "################# Some Gui Options ########################################
 set guioptions-=m  "remove menu bar
 set guioptions-=T  "remove toolbar
@@ -364,6 +362,8 @@ function LightTheme()
   nnoremap <C-P> :NERDTreeTabsToggle<CR> :redraw!<CR>
   highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=226 ctermbg=226
 
+  hi cursorlinenr ctermbg=254
+  :silent! set fillchars+=vert:▏
   let g:airline#extensions#bufferline#enabled = 0
   let g:airline#extensions#tabline#enabled = 1
   let g:airline#extensions#tabline#fnamemod = ':t'
@@ -371,17 +371,17 @@ endfunction
 
 function DarkTheme()
     set background=dark
-    colorscheme happy_hacking
+    colorscheme base16-tomorrow-night
     :syntax on
-    let g:airline_theme='angr'
+    let g:airline_theme='base16_tomorrow'
     :silent! set fillchars+=vert:█
-    :silent! AirlineTheme angr
+    :silent! AirlineTheme base16_tomorrow
     "specifically this is for happy hacking
-    hi cursorline ctermfg=none ctermbg=236 cterm=none
-    hi Title ctermfg=107
-    hi cursorlinenr ctermfg=yellow ctermbg=236
-    hi MatchParen ctermfg=none ctermbg=none cterm=underline
-    highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=221 ctermbg=221
+    " hi cursorline ctermfg=none ctermbg=236 cterm=none
+    " hi Title ctermfg=107
+    " hi cursorlinenr ctermfg=yellow ctermbg=236
+    " hi MatchParen ctermfg=none ctermbg=none cterm=underline
+    " highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=221 ctermbg=221
 endfunction
 
 :call DarkTheme()
