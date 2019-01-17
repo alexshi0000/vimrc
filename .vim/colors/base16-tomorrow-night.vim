@@ -132,11 +132,11 @@ call <sid>hi("StatusLineTermNC", s:gui01, s:gui01, s:cterm05, s:cterm03, "none",
 hi StatusLineTerm term=none
 
 " Vim editor colors
-" call <sid>hi("Normal",        s:gui05, s:gui00, s:cterm05, "none", "", "")
+call <sid>hi("Normal",        s:gui05, s:gui00, s:cterm05, s:cterm00, "", "")
 call <sid>hi("Bold",          "", "", "", "", "bold", "")
 call <sid>hi("Debug",         s:gui08, "", s:cterm08, "", "", "")
 call <sid>hi("Directory",     s:gui0D, "", s:cterm0D, s:cterm00, "", "")
-call <sid>hi("Error",         s:gui00, s:gui08, s:cterm00, s:cterm08, "", "")
+call <sid>hi("Error",         s:gui00, s:gui08, s:cterm01, s:cterm08, "", "")
 call <sid>hi("ErrorMsg",      s:gui08, s:gui00, s:cterm08, s:cterm00, "", "")
 call <sid>hi("Exception",     s:gui08, "", s:cterm08, "", "", "")
 call <sid>hi("FoldColumn",    s:gui0C, s:gui01, s:cterm00, s:cterm00, "", "")
@@ -150,7 +150,7 @@ call <sid>hi("MoreMsg",       s:gui0B, "", s:cterm0B, "", "", "")
 call <sid>hi("Question",      s:gui0D, "", s:cterm0D, "", "", "")
 call <sid>hi("Search",        s:gui01, s:gui0A, s:cterm00, s:cterm0A, "underline", "")
 call <sid>hi("Substitute",    s:gui01, s:gui0A, s:cterm01, s:cterm0A, "none", "")
-call <sid>hi("SpecialKey",    s:gui03, "", s:cterm07, "", "", "")
+call <sid>hi("SpecialKey",    s:gui03, "", s:cterm03, "", "", "")
 call <sid>hi("TooLong",       s:gui08, "", s:cterm08, "", "", "")
 call <sid>hi("Underlined",    s:gui08, "", s:cterm08, "", "", "")
 call <sid>hi("Visual",        "", s:gui02, s:cterm05, s:cterm03, "", "")
@@ -160,8 +160,8 @@ call <sid>hi("WildMenu",      s:gui08, s:gui0A, s:cterm00, s:cterm05, "", "")
 call <sid>hi("Title",         s:gui0D, "", s:cterm0D, "", "none", "")
 call <sid>hi("Conceal",       s:gui0D, s:gui00, s:cterm07, s:cterm00, "", "")
 call <sid>hi("Cursor",        s:gui00, s:gui05, s:cterm05, s:cterm00, "", "")
-call <sid>hi("NonText",       s:gui03, "", s:cterm00, s:cterm00, "", "")
-call <sid>hi("LineNr",        s:gui03, s:gui01, s:cterm03, s:cterm07, "", "")
+call <sid>hi("NonText",       s:gui03, "", s:cterm03, s:cterm00, "", "")
+call <sid>hi("LineNr",        s:gui03, s:gui01, s:cterm03, s:cterm00, "", "")
 call <sid>hi("SignColumn",    s:gui03, s:gui01, s:cterm03, s:cterm01, "", "")
 call <sid>hi("StatusLine",    s:gui04, s:gui02, s:cterm05, s:cterm03, "none", "")
 call <sid>hi("StatusLineNC",  s:gui03, s:gui01, s:cterm03, s:cterm03, "none", "")
@@ -307,6 +307,7 @@ call <sid>hi("markdownHeadingDelimiter",  s:gui0D, "", s:cterm0D, "", "", "")
 " NERDTree highlighting
 call <sid>hi("NERDTreeDirSlash",  s:gui0D, "", s:cterm03, "", "", "")
 call <sid>hi("NERDTreeExecFile",  s:gui05, "", s:cterm06, "", "", "")
+call <sid>hi("NERDTreeCWD",  s:gui05, "", s:cterm01, "", "", "")
 "change nerdtree arrow colors
 hi NERDTreeOpenable ctermfg=8
 hi NERDTreeClosable ctermfg=7
