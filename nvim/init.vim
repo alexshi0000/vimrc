@@ -8,7 +8,20 @@
 "     | |/ /_/ / / /  / /  / /___ / /_/ // /|  // __/  _/ / / /_/ /
 "     |___//___//_/  /_/   \____/ \____//_/ |_//_/    /___/ \____/
 "
-"     FOR NEOVIM
+"     - FOR NEOVIM, BY ALEX SHI
+"
+"
+" TODO:
+"   - dont forget to fork all of the following plugins
+"   - make changes to the plugins
+"   - change source to my github
+"   - need to add the deep-space color scheme
+"
+" CHANGELOG:
+"   - got rid of some dependencies
+"   - added terminal key shortcuts
+"   - added gruvbox
+"   - installed ctrlp for fuzzy file searching
 "
 "
 "################ Plugins ##################################################
@@ -29,6 +42,11 @@ call vundle#begin()
   Plugin 'kh3phr3n/python-syntax'
   Plugin 'NLKNguyen/papercolor-theme'
   Plugin 'ap/vim-buftabline'
+  Plugin 'morhetz/gruvbox'
+  Plugin 'majutsushi/tagbar'
+  Plugin 'alexshi0000/awesome-vim-colorschemes'
+  Plugin 'alexshi0000/vim-deep-space'
+  Plugin 'kien/ctrlp.vim'
 call vundle#end()
 
 filetype plugin on
@@ -60,7 +78,7 @@ let &t_SI = "\<Esc>[5 q"
 let &t_SR = "\<Esc>[3 q"
 let &t_EI = "\<Esc>[1 q"
 
-set guicursor=n:blinkon1
+set guicursor=a:blinkon1 "all blink on1
 
 ":cd ~/Documents/workspace
 set termguicolors
@@ -78,14 +96,13 @@ set smartcase
 set incsearch
 set cursorline
 set nu
-set nowrap
+set wrap
 set encoding=UTF-8
 set hidden
 set foldcolumn=0
 set foldmethod=indent
 set foldlevelstart=99
 set colorcolumn=80
-set lazyredraw
 let &colorcolumn=join(range(81,999),",")
 set omnifunc=syntaxcomplete#Complete
 "set relativenumber
@@ -93,15 +110,21 @@ set showtabline=2
 "set ic is to ignore casing for searches
 "autocmd BufEnter * silent! lcd %:p:h
 
+"keep cursor in the exact same location when leaving or entering buffers
+if v:version >= 700
+  au BufLeave * let b:winview = winsaveview()
+  au BufEnter * if(exists('b:winview')) | call winrestview(b:winview) | endif
+endif
+
 "this is where to find swap files
 set directory^=$HOME/.vim/tmp//
 
 "Unbind the cursor keys in insert, normal and visual modes.
-for prefix in ['i', 'n', 'v']
-    for key in ['<Up>', '<Down>', '<Left>', '<Right>']
-        exe prefix . "noremap " . key . " <Nop>"
-    endfor
-endfor
+"for prefix in ['i', 'n', 'v']
+"    for key in ['<Up>', '<Down>', '<Left>', '<Right>']
+"        exe prefix . "noremap " . key . " <Nop>"
+"    endfor
+"endfor
 
 "retab everything our way, but keep silent if modify is off
 autocmd BufEnter * silent! :retab
@@ -134,7 +157,7 @@ set timeoutlen=350
 map  <C-L> :bnext<CR>
 map  <C-H> :bprevious<CR>
 nmap <C-C> :BD!
-nmap <C-X> :term<CR>i
+nmap <C-X> :below split<Return>:resize 15<Return>:term<CR>i
 
 "intentionally remove ctrl-z for suspend jobs, can use ctrl-z for tmux meta key
 nmap <C-Z> :set hidden<CR>:<C-Z><CR>
@@ -143,6 +166,9 @@ nmap <C-Z> :set hidden<CR>:<C-Z><CR>
 "install vim-gtk
 nmap <C-v> "+p
 vmap <C-c> "+y
+nmap <F8> :TagbarToggle<CR>
+"this is going to be for ctrlp
+nnoremap <C-P> :ctrlp <CR>
 
 
 
@@ -152,9 +178,10 @@ syntax on
 set t_Co=16
 colorscheme deep-space
 set background=dark
-set fillchars+=vert:▎
+" set fillchars+=vert:▎
 let python_highlight_all=1
 let g:javascript_plugin_jsdoc=1
+let g:tagbar_iconchars = ['~ ', '+ ']
 
 " SOME EXTRA HIGHLIGHTING OPTIONS
 " here we are going to set something to show trailing whitespaces
@@ -184,7 +211,7 @@ let g:webdevicons_enable = 0
 let g:webdevicons_enable_airline_statusline = 0 "turn off devicons for status bar
 "let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
 let NERDTreeStatusline=''
-let g:NERDTreeWinSize=35
+let g:NERDTreeWinSize=31
 let g:NERDTreeHighlightCursorline = 1
 let g:NERDTreeSyntaxDisableDefaultExtensions = 1
 let g:NERDTreeDisableExactMatchHighlight = 1
@@ -194,7 +221,7 @@ let g:NERDTreeDirArrowCollapsible = '+'
 let NERDTreeMinimalUI=1
 hi NERDTreeOpenable guifg=#41516a
 hi NERDTreeClosable guifg=#9aa7bd
-nnoremap <C-P> :NERDTreeToggle<CR>
+nnoremap <F7> :NERDTreeToggle <CR>
 
 
 
@@ -206,7 +233,6 @@ let g:bufferline_active_buffer_left = ''
 let g:bufferline_active_buffer_right = ''
 let g:bufferline_modified = '+'
 let g:bufferline_inactive_highlight = 'LineNr'
-let g:bufferline_active_highlight = 'Normal'
 let g:bufferline_solo_highlight = 0
 let g:bufferline_echo = 0
 let g:bufferline_pathshorten = 1
