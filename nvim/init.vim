@@ -145,6 +145,10 @@ autocmd FileType cuda       set tabstop=8|set shiftwidth=8|set softtabstop=8
 "retab everything our way, but keep silent if modify is off
 autocmd BufEnter * silent! :retab
 
+"change working directory to the directory of the current file (when entering
+"buffers)
+autocmd BufEnter * silent! lcd %:p:h
+
 
 
 
