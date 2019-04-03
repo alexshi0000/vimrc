@@ -111,6 +111,9 @@ set directory^=$HOME/.vim/tmp//
 "retab everything our way, but keep silent if modify is off
 autocmd BufEnter * silent! :retab
 
+"remove autocomplete comment
+set formatoptions-=r
+set formatoptions-=o
 
 
 
@@ -122,8 +125,6 @@ map <F9> gg=G<C-o><C-o>
 
 "################# Key Mappings ############################################
 imap jj <Esc>
-imap JJ <Esc>
-
 set timeoutlen=350
 "we have to map some keys for the tabs the hidden command allows us to
 "leave a buffer hidden without having to save the buffer
