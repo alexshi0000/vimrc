@@ -20,21 +20,24 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 "first install vundle in order to use the plugin manager
 call vundle#begin()
-  Plugin 'scrooloose/nerdtree'
-  Plugin 'jistr/vim-nerdtree-tabs'
-  Plugin 'pangloss/vim-javascript'
-  Plugin 'haya14busa/incsearch.vim'
-  Plugin 'majutsushi/tagbar'
-  Plugin 'bling/vim-bufferline'
-  Plugin 'vim-airline/vim-airline'
-  Plugin 'vim-airline/vim-airline-themes'
-  Plugin 'qpkorr/vim-bufkill'
-  Plugin 'itchyny/vim-gitbranch'
-  Plugin 'ryanoasis/vim-devicons'
-  Plugin 'ervandew/supertab'
-  Plugin 'kh3phr3n/python-syntax'
-  Plugin 'NLKNguyen/papercolor-theme'
-  Plugin 'lervag/vimtex'
+Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'pangloss/vim-javascript'
+Plugin 'haya14busa/incsearch.vim'
+Plugin 'majutsushi/tagbar'
+Plugin 'bling/vim-bufferline'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'qpkorr/vim-bufkill'
+Plugin 'itchyny/vim-gitbranch'
+Plugin 'ryanoasis/vim-devicons'
+Plugin 'ervandew/supertab'
+Plugin 'kh3phr3n/python-syntax'
+Plugin 'NLKNguyen/papercolor-theme'
+Plugin 'lervag/vimtex'
+Plugin 'alexshi0000/gruvbox'
+Plugin 'noah/vim256-color'
+Plugin 'kien/ctrlp.vim'
 call vundle#end()
 
 filetype plugin on
@@ -75,7 +78,7 @@ set smartcase
 set incsearch
 set cursorline
 set nu
-set nowrap
+set wrap
 set encoding=UTF-8
 set hidden
 set foldcolumn=0
@@ -84,6 +87,13 @@ set foldlevelstart=99
 set colorcolumn=80
 let &colorcolumn=join(range(81,999),",")
 set omnifunc=syntaxcomplete#Complete
+
+"keep cursor in the exact same location when leaving or entering buffers
+if v:version >= 700
+    au BufLeave * let b:winview = winsaveview()
+    au BufEnter * if(exists('b:winview')) | call winrestview(b:winview) | endif
+endif
+
 "set relativenumber
 "set showtabline=2
 "set ic is to ignore casing for searches
@@ -91,18 +101,6 @@ set omnifunc=syntaxcomplete#Complete
 
 "this is where to find swap files
 set directory^=$HOME/.vim/tmp//
-
-"change tabstop by file, some files like js and html need 2 spaces
-autocmd FileType css        set tabstop=2|set shiftwidth=2|set softtabstop=2
-autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2
-autocmd FileType html       set tabstop=2|set shiftwidth=2|set softtabstop=2
-
-autocmd FileType java       set tabstop=4|set shiftwidth=4|set softtabstop=4
-autocmd FileType python     set tabstop=4|set shiftwidth=4|set softtabstop=4
-
-autocmd FileType c          set tabstop=8|set shiftwidth=8|set softtabstop=8
-autocmd FileType cpp        set tabstop=8|set shiftwidth=8|set softtabstop=8
-autocmd FileType cuda       set tabstop=8|set shiftwidth=8|set softtabstop=8
 
 "Unbind the cursor keys in insert, normal and visual modes.
 "for prefix in ['i', 'n', 'v']
@@ -114,12 +112,20 @@ autocmd FileType cuda       set tabstop=8|set shiftwidth=8|set softtabstop=8
 "retab everything our way, but keep silent if modify is off
 autocmd BufEnter * silent! :retab
 
+"remove autocomplete comment
+set formatoptions-=r
+set formatoptions-=o
+
+
+
+"################# Easy Retabing ###########################################
+map <F9> gg=G<C-o><C-o>
+
 
 
 
 "################# Key Mappings ############################################
 imap jj <Esc>
-imap JJ <Esc>
 set timeoutlen=350
 "we have to map some keys for the tabs the hidden command allows us to
 "leave a buffer hidden without having to save the buffer
@@ -155,7 +161,7 @@ autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
-highlight ExtraWhitespace ctermfg=3 ctermbg=3
+highlight ExtraWhitespace ctermfg=yellow ctermbg=3
 
 
 
@@ -176,7 +182,7 @@ let g:NERDTreeDirArrowCollapsible = '+'
 let NERDTreeMinimalUI=1
 hi NERDTreeOpenable ctermfg=8
 hi NERDTreeClosable ctermfg=7
-nnoremap <C-P> :NERDTreeTabsToggle<CR>
+map <C-T> :NERDTreeToggle <CR>
 
 
 
@@ -190,7 +196,7 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 "instead of the above we will simply use :ls and then :b <buffername>
 let g:airline_powerline_fonts = 1
-let g:airline_theme='base16_tomorrow'
+"let g:airline_theme='base16_tomorrow'
 let g:airline_section_b = ' %{gitbranch#name()}'
 let g:airline_section_c = ''
 let g:airline_section_x = ''
@@ -228,12 +234,12 @@ let g:airline_symbols.maxlinenr = ''
 
 let g:airline_exclude_preview = 0 "remove known bug with nerdtree previews
 let g:airline#extensions#default#section_truncate_width = {
-      \ 'a': 0,
-      \ 'b': 0,
-      \ 'x': 0,
-      \ 'y': 0,
-      \ 'z': 0,
-      \ }
+            \ 'a': 0,
+            \ 'b': 0,
+            \ 'x': 0,
+            \ 'y': 0,
+            \ 'z': 0,
+            \ }
 
 "let g:airline_mode_map = {
 "      \ '__' : '-',
@@ -333,6 +339,12 @@ let g:vimshell_use_terminal_command = 'urxvt'
 
 
 
+"################### CTRLP #################################################
+let g:ctrlp_max_files = 0
+
+
+
+
 "################# Some Gui Options ########################################
 set guioptions-=m  "remove menu bar
 set guioptions-=T  "remove toolbar
@@ -344,31 +356,46 @@ set guioptions-=lrbmTLce
 set guioptions+=c
 "comment down below for (light theme _____***OR***_____ for gui)
 function LightTheme()
-  let g:nerdtree_tabs_open_on_gui_startup = 0
-  set t_Co=256
+    let g:nerdtree_tabs_open_on_gui_startup = 0
+    set t_Co=256
 
-  set background=light
-  colorscheme PaperColor
-  let g:airline_theme='papercolor'
-  ":AirlineTheme papercolor turn this off for defaults
+    set background=light
+    colorscheme PaperColor
+    let g:airline_theme='papercolor'
+    :silent! AirlineTheme PaperColor "turn this off if papercolor is by default
 
-  nnoremap <C-P> :NERDTreeTabsToggle<CR> :redraw!<CR>
-  highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=226 ctermbg=226
+    nnoremap <C-P> :NERDTreeTabsToggle<CR> :redraw!<CR>
+    highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=226 ctermbg=226
 
-  let g:airline#extensions#bufferline#enabled = 0
-  let g:airline#extensions#tabline#enabled = 1
-  let g:airline#extensions#tabline#fnamemod = ':t'
+    hi cursorlinenr ctermbg=254
+    :silent! set fillchars+=vert:▏
+    let g:airline#extensions#bufferline#enabled = 0
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#fnamemod = ':t'
 endfunction
 
 function DarkTheme()
     set background=dark
-    :colorscheme happy_hacking
-    let g:airline_theme='angr'
-    set fillchars+=vert:█
-    hi cursorline ctermfg=none ctermbg=none cterm=none
-    hi MatchParen ctermfg=none ctermbg=none cterm=underline
-    highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=221 ctermbg=221
+    colorscheme base16-tomorrow-night
+    :syntax on
+    let g:airline_theme='base16_tomorrow'
+    :silent! set fillchars+=vert:█
+    :silent! AirlineTheme base16_tomorrow
+    "specifically this is for happy hacking
+    " hi cursorline ctermfg=none ctermbg=236 cterm=none
+    " hi Title ctermfg=107
+    " hi cursorlinenr ctermfg=yellow ctermbg=236
+    " hi MatchParen ctermfg=none ctermbg=none cterm=underline
+    " highlight ExtraWhitespace guifg=yellow guibg=yellow ctermfg=221 ctermbg=221
 endfunction
 
-:call DarkTheme()
+function Vintage()
+    set t_Co=256
+    set background=dark
+    colorscheme twilight256
+    au VimEnter * AirlineToggle
+    set colorcolumn=9999
+endfunction
+
+:call Vintage()
 ```
