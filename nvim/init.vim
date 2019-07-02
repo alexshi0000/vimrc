@@ -1,7 +1,5 @@
 "
 "
-"
-"
 "      _    __ ____ __  ___   ______ ____   _   __ ______ ____ ______
 "     | |  / //  _//  |/  /  / ____// __ \ / | / // ____//  _// ____/
 "     | | / / / / / /|_/ /  / /    / / / //  |/ // /_    / / / / __
@@ -11,7 +9,7 @@
 "     - FOR NEOVIM, BY ALEX SHI
 "
 "
-" TODO:
+" TODO
 "   - dont forget to fork all of the following plugins
 "   - make changes to the plugins
 "   - change source to my github
@@ -42,7 +40,7 @@ call vundle#begin()
   Plugin 'kh3phr3n/python-syntax'
   Plugin 'NLKNguyen/papercolor-theme'
   Plugin 'ap/vim-buftabline'
-  Plugin 'morhetz/gruvbox'
+  Plugin 'alexshi0000/gruvbox'
   Plugin 'majutsushi/tagbar'
   Plugin 'alexshi0000/awesome-vim-colorschemes'
   Plugin 'alexshi0000/vim-deep-space'
@@ -81,6 +79,8 @@ let &t_EI = "\<Esc>[1 q"
 set guicursor=a:blinkon1 "all blink on1
 
 ":cd ~/Documents/workspace
+let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
 set termguicolors
 set wildmenu
 set backspace=2
@@ -99,13 +99,14 @@ set nu
 set wrap
 set encoding=UTF-8
 set hidden
+set formatoptions-=r
 set foldcolumn=0
 set foldmethod=indent
 set foldlevelstart=99
 set colorcolumn=80
 let &colorcolumn=join(range(81,999),",")
 set omnifunc=syntaxcomplete#Complete
-"set relativenumber
+set relativenumber
 set showtabline=2
 "set ic is to ignore casing for searches
 "autocmd BufEnter * silent! lcd %:p:h
@@ -129,18 +130,19 @@ set directory^=$HOME/.vim/tmp//
 "retab everything our way, but keep silent if modify is off
 autocmd BufEnter * silent! :retab
 
+" CUSTOM SETTINGS
 "change tabstop by file, some files like js and html need 2 spaces
-autocmd FileType css        set tabstop=2|set shiftwidth=2|set softtabstop=2
-autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2
-autocmd FileType html       set tabstop=2|set shiftwidth=2|set softtabstop=2
+autocmd FileType css        set tabstop=2|set shiftwidth=2|set softtabstop=2 nowrap
+autocmd FileType javascript set tabstop=2|set shiftwidth=2|set softtabstop=2 nowrap
+autocmd FileType html       set tabstop=2|set shiftwidth=2|set softtabstop=2 nowrap
 
 autocmd FileType java       set tabstop=4|set shiftwidth=4|set softtabstop=4
 autocmd FileType python     set tabstop=4|set shiftwidth=4|set softtabstop=4
 autocmd FileType matlab     set tabstop=4|set shiftwidth=4|set softtabstop=4
 
 autocmd FileType c          set tabstop=8|set shiftwidth=8|set softtabstop=8
-autocmd FileType cpp        set tabstop=8|set shiftwidth=8|set softtabstop=8
 autocmd FileType cuda       set tabstop=8|set shiftwidth=8|set softtabstop=8
+autocmd FileType cpp        set tabstop=4|set shiftwidth=4|set softtabstop=4
 
 "retab everything our way, but keep silent if modify is off
 autocmd BufEnter * silent! :retab
@@ -154,14 +156,14 @@ autocmd BufEnter * silent! lcd %:p:h
 
 "################# Key Mappings ############################################
 imap jj <Esc>
-imap JJ <Esc>
+"imap JJ <Esc>
 set timeoutlen=350
 "we have to map some keys for the tabs the hidden command allows us to
 "leave a buffer hidden without having to save the buffer
 map  <C-L> :bnext<CR>
 map  <C-H> :bprevious<CR>
 nmap <C-C> :BD!
-nmap <C-X> :below split<Return>:resize 15<Return>:term<CR>i
+nmap <C-X> :above split<Return>:resize 15<Return>:term<CR>i
 
 "intentionally remove ctrl-z for suspend jobs, can use ctrl-z for tmux meta key
 nmap <C-Z> :set hidden<CR>:<C-Z><CR>
@@ -223,9 +225,7 @@ let g:NERDTreeDisablePatternMatchHighlight = 1
 let g:NERDTreeDirArrowExpandable = '~'
 let g:NERDTreeDirArrowCollapsible = '+'
 let NERDTreeMinimalUI=1
-hi NERDTreeOpenable guifg=#41516a
-hi NERDTreeClosable guifg=#9aa7bd
-nnoremap <F7> :NERDTreeToggle <CR>
+nnoremap <C-T> :NERDTreeToggle <CR>
 
 
 
