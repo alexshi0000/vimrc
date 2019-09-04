@@ -1,9 +1,6 @@
 " Minimal vimrc for server
-" Author: reorx
-" Usage:
-"     curl -sL https://gist.github.com/reorx/94e18825bc4002268f66/raw -o ~/.vimrc
-"     or
-"     curl -sL https://gist.github.com/reorx/94e18825bc4002268f66/raw | sudo tee --append /etc/vimrc
+
+syn on
 
 set nocompatible                " choose no compatibility with legacy vi
 syntax enable
@@ -21,7 +18,6 @@ if &history < 1000
 endif
 
 " Time out on key codes but not mappings. Makes terminal Vim work sanely
-set notimeout
 set ttimeout
 set ttimeoutlen=100
 
@@ -124,3 +120,11 @@ if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
 endif
 
 inoremap <C-U> <C-G>u<C-U>
+
+
+
+
+"================ User Setting Here ==========================================
+
+set timeoutlen=350
+imap jj <Esc>
