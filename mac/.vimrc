@@ -1,6 +1,6 @@
 "
 "
-" _    __ ____ __  ___   ______ ____   _   __ ______ ____ ______
+"      _    __ ____ __  ___   ______ ____   _   __ ______ ____ ______
 "     | |  / //  _//  |/  /  / ____// __ \ / | / // ____//  _// ____/
 "     | | / / / / / /|_/ /  / /    / / / //  |/ // /_    / / / / __
 "     | |/ /_/ / / /  / /  / /___ / /_/ // /|  // __/  _/ / / /_/ /
@@ -25,6 +25,7 @@ Plugin 'bling/vim-bufferline'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'qpkorr/vim-bufkill'
+Plugin 'alexshi0000/vim-deep-space'
 Plugin 'itchyny/vim-gitbranch'
 Plugin 'ryanoasis/vim-devicons'
 Plugin 'ervandew/supertab'
@@ -123,7 +124,7 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
  
 set background=dark
-colorscheme nord
+colorscheme deep-space
 
 set guicursor=n-v-c:block-Cursor
 set guicursor+=i:ver100-iCursor
@@ -158,8 +159,8 @@ let g:NERDTreeDirArrowCollapsible = '+'
 let NERDTreeMinimalUI=1
 let NERDTreeIgnore = ['\.DAT$', '\.LOG1$', '\.LOG1$']
 
-nnoremap <C-T> :NERDTreeToggle <CR> :AirlineToggle <CR> :AirlineToggle <CR>
 "toggle back to refresh for errors
+nnoremap <C-T> :NERDTreeToggle <CR> :AirlineToggle <CR> :AirlineToggle <CR>
 
 :silent! set fillchars+=vert:▌
 
@@ -188,7 +189,7 @@ let g:airline#extensions#tabline#enabled = 0
 let g:airline#extensions#tabline#fnamemod = ':t'
 "instead of the above we will simply use :ls and then :b <buffername>
 let g:airline_powerline_fonts = 1
-let g:airline_theme='nord'
+let g:airline_theme='deep_space'
 let g:airline_section_b = ' %{gitbranch#name()}'
 let g:airline_section_x = ''
 let g:airline_section_y = '%{&fileencoding?&fileencoding:&encoding} %{&fileformat}'
