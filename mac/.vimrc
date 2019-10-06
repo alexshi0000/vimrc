@@ -21,22 +21,31 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'pangloss/vim-javascript'
 Plugin 'haya14busa/incsearch.vim'
 Plugin 'majutsushi/tagbar'
-Plugin 'bling/vim-bufferline'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
 Plugin 'qpkorr/vim-bufkill'
-Plugin 'alexshi0000/vim-deep-space'
 Plugin 'itchyny/vim-gitbranch'
 Plugin 'ryanoasis/vim-devicons'
 Plugin 'ervandew/supertab'
 Plugin 'kh3phr3n/python-syntax'
-Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'lervag/vimtex'
 Plugin 'alexshi0000/gruvbox'
 Plugin 'noah/vim256-color'
-Plugin 'kien/ctrlp.vim'
-Plugin 'arcticicestudio/nord-vim'
 Plugin 'tpope/vim-sensible'
+Plugin 'numirias/semshi'
+Plugin 'cocopon/iceberg.vim'
+Plugin 'arcticicestudio/nord-vim'
+Plugin 'NLKNguyen/papercolor-theme'
+Plugin 'AlessandroYorba/Alduin'
+Plugin 'tyrannicaltoucan/vim-quantum'
+Plugin 'haishanh/night-owl.vim'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'kien/ctrlp.vim'
+
+"GRAVEYARD
+"Plugin 'bling/vim-bufferline'
+Plugin 'alexshi0000/vim-deep-space'
+
+
 call vundle#end()
 
 filetype plugin on
@@ -63,11 +72,9 @@ let &t_EI = "\<Esc>[1 q"
 ":cd ~/Documents/workspace
 set wildmenu
 set backspace=2
-set mouse=a
+set mouse=""
 set tabstop=4
 set shiftwidth=4
-set softtabstop=4
-set expandtab
 set autoindent
 set cindent
 set ignorecase
@@ -88,12 +95,27 @@ set relativenumber
 
 "keep cursor in the exact same location when leaving or entering buffers
 if v:version >= 700
-    au BufLeave * let b:winview = winsaveview()
-    au BufEnter * if(exists('b:winview')) | call winrestview(b:winview) | endif
+	au BufLeave * let b:winview = winsaveview()
+	au BufEnter * if(exists('b:winview')) | call winrestview(b:winview) | endif
 endif
+
+set directory^=$HOME/.vim/tmp//
 
 set formatoptions-=r
 set formatoptions-=o
+
+"change tabstop by file, some files like js and html need 2 spaces
+autocmd FileType css        set tabstop=2|set shiftwidth=2
+autocmd FileType javascript set tabstop=2|set shiftwidth=2
+autocmd FileType html       set tabstop=2|set shiftwidth=2|set nowrap
+
+autocmd FileType java       set tabstop=4|set shiftwidth=4
+autocmd FileType python     set tabstop=4|set shiftwidth=4|set expandtab|set softtabstop=4
+autocmd FileType cpp        set tabstop=4|set shiftwidth=4
+autocmd FileType ruby       set tabstop=4|set shiftwidth=4
+
+autocmd FileType c          set tabstop=8|set shiftwidth=8
+autocmd FileType cuda       set tabstop=8|set shiftwidth=8
 
 
 "################# Easy Retabing ###########################################
@@ -101,7 +123,7 @@ map <F9> gg=G<C-o><C-o>
 
 
 "################# Key Mappings ############################################
-imap jj <Esc>
+"imap jj <Esc>
 set timeoutlen=275
 "we have to map some keys for the tabs the hidden command allows us to
 "leave a buffer hidden without having to save the buffer
@@ -116,14 +138,17 @@ nmap <C-Z> :set hidden<CR>:<C-Z><CR>
 nmap <C-v> "+p
 vmap <C-c> "+y
 
+nmap <C-b> :buffers<CR>:b
+
 
 "################ Eye Candy ################################################
 syntax on
 set termguicolors
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
- 
+
 set background=dark
+let g:quantum_black=1
 colorscheme deep-space
 
 set guicursor=n-v-c:block-Cursor
@@ -135,13 +160,36 @@ let python_highlight_all=1
 let g:javascript_plugin_jsdoc=1
 let g:tagbar_iconchars = ['~ ', '+ ']
 
+"this syntax hilighting is called CSyntaxAfter
+function! CSyntaxAfter()
+	syntax keyword Boolean true false NULL TRUE FALSE
+	syntax keyword Normal sizeof
+	syntax keyword Statement stderr stdin stdout
+
+	syntax match	myBracket "[\[\]]"
+	syntax match	myBlock "[{}]"
+	hi link			myBracket Constant
+
+	syntax match	myOperator display "[-+&|<>=!\/~.,;:*%&^?()@]"
+	syntax region	myComment start="\/\*" end="\*\/"
+	syntax match	myComment "\/\/.*$"
+
+	hi link myOperator Operator
+	hi link myComment Comment
+endfunction
+
+autocmd! FileType c,cpp,java,php call CSyntaxAfter()
+
+"set listchars=tab:│\ ,eol:⌝
+"set list
+
 " SOME EXTRA HIGHLIGHTING OPTIONS
 " here we are going to set something to show trailing whitespaces
-" match ExtraWhitespace /\s\+$/
-" autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-" autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-" autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-" autocmd BufWinLeave * call clearmatches()
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
 
 
 "############### NERDtree #################################################
@@ -162,7 +210,8 @@ let NERDTreeIgnore = ['\.DAT$', '\.LOG1$', '\.LOG1$']
 "toggle back to refresh for errors
 nnoremap <C-T> :NERDTreeToggle <CR> :AirlineToggle <CR> :AirlineToggle <CR>
 
-:silent! set fillchars+=vert:▌
+":silent! set fillchars+=vert:▌
+":set fillchars+=vert:▌
 
 
 "#################### INC Search ###########################################
@@ -182,8 +231,31 @@ map g# <Plug>(incsearch-nohl-g#)
 
 "################ Vim Airlines #############################################
 function! GitBranch()
-    return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+	return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
 endfunction
+
+function! WhoAmI()
+	return system("whoami 2>/dev/null | tr -d '\n'")
+endfunction
+
+function! PWD()
+	return system("pwd 2>/dev/null | tr -d '\n'")
+endfunction
+
+"custom for now
+"set statusline=
+"set statusline+=\ %{WhoAmI()}
+"set statusline+=\ =>
+"set statusline+=\ %{GitBranch()}
+"set statusline+=/
+"set statusline+=%f
+"set statusline+=%m
+"set statusline+=%=
+"set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
+"set statusline+=\ %{&fileformat}
+"set statusline+=\ %p%%
+"set statusline+=\ %l:%c
+"set statusline+=\
 
 let g:airline#extensions#tabline#enabled = 0
 let g:airline#extensions#tabline#fnamemod = ':t'
@@ -226,12 +298,12 @@ let g:airline_symbols.maxlinenr = ''
 
 let g:airline_exclude_preview = 0 "remove known bug with nerdtree previews
 let g:airline#extensions#default#section_truncate_width = {
-      \ 'a': 0,
-      \ 'b': 0,
-      \ 'x': 0,
-      \ 'y': 0,
-      \ 'z': 0,
-      \ }
+			\ 'a': 0,
+			\ 'b': 0,
+			\ 'x': 0,
+			\ 'y': 0,
+			\ 'z': 0,
+			\ }
 
 
 "############# BufferLine ##################################################
@@ -240,7 +312,7 @@ let g:airline#extensions#bufferline#enabled = 1 "set to 1 in order to enable
 let g:bufferline_active_buffer_left = ''
 let g:bufferline_active_buffer_right = ''
 let g:bufferline_modified = '+'
-let g:bufferline_inactive_highlight = 'LineNr'
+let g:bufferline_inactive_highlight = 'Comment'
 let g:bufferline_active_highlight = 'Normal'
 let g:bufferline_solo_highlight = 0
 let g:bufferline_echo = 0
