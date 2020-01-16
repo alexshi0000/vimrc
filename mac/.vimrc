@@ -27,24 +27,37 @@ Plugin 'ryanoasis/vim-devicons'
 Plugin 'ervandew/supertab'
 Plugin 'kh3phr3n/python-syntax'
 Plugin 'lervag/vimtex'
-Plugin 'alexshi0000/gruvbox'
 Plugin 'noah/vim256-color'
 Plugin 'tpope/vim-sensible'
 Plugin 'numirias/semshi'
-Plugin 'cocopon/iceberg.vim'
-Plugin 'arcticicestudio/nord-vim'
-Plugin 'NLKNguyen/papercolor-theme'
-Plugin 'AlessandroYorba/Alduin'
-Plugin 'tyrannicaltoucan/vim-quantum'
-Plugin 'haishanh/night-owl.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'kien/ctrlp.vim'
-
-"GRAVEYARD
+Plugin 'davidosomething/vim-colors-meh'
+Plugin 'sainnhe/edge'
+Plugin 'alvan/vim-closetag'
+Plugin 'alexshi0000/monokai-improved'
+Plugin 'uiiaoo/java-syntax.vim'
+Plugin 'tpope/vim-sleuth'
+"Plugin 'python-mode/python-mode'
+"Plugin 'NLKNguyen/papercolor-theme'
+"Plugin 'alexshi0000/gruvbox'
+"Plugin 'alexshi0000/vim-deep-space'
+"Plugin 'jiangmiao/auto-pairs'
 "Plugin 'bling/vim-bufferline'
-Plugin 'alexshi0000/vim-deep-space'
-
+"Plugin 'ap/vim-buftabline'
+"Plugin 'rafalbromirski/vim-aurora'
+"Plugin 'w0ng/vim-hybrid'
+"Plugin 'joshdick/onedark.vim'
+"Plugin 'chriskempson/vim-tomorrow-theme'
+"Plugin 'plainfingers/black_is_the_color'
+"Plugin 'AlessandroYorba/Sierra'
+"Plugin 'ayu-theme/ayu-vim'
+"Plugin 'cocopon/iceberg.vim'
+"Plugin 'alexshi0000/nord-vim'
+"Plugin 'AlessandroYorba/Alduin'
+"Plugin 'tyrannicaltoucan/vim-quantum'
+"Plugin 'haishanh/night-owl.vim'
 
 call vundle#end()
 
@@ -72,7 +85,7 @@ let &t_EI = "\<Esc>[1 q"
 ":cd ~/Documents/workspace
 set wildmenu
 set backspace=2
-set mouse=""
+set mouse=a
 set tabstop=4
 set shiftwidth=4
 set autoindent
@@ -92,6 +105,7 @@ set colorcolumn=80
 let &colorcolumn=join(range(81,999),",")
 set omnifunc=syntaxcomplete#Complete
 set relativenumber
+"set tabline=2
 
 "keep cursor in the exact same location when leaving or entering buffers
 if v:version >= 700
@@ -99,7 +113,9 @@ if v:version >= 700
 	au BufEnter * if(exists('b:winview')) | call winrestview(b:winview) | endif
 endif
 
-set directory^=$HOME/.vim/tmp//
+set backupdir=.backup/,~/.backup/,/tmp//
+set directory=.swp/,~/.swp/,/tmp//
+set undodir=.undo/,~/.undo/,/tmp/
 
 set formatoptions-=r
 set formatoptions-=o
@@ -107,15 +123,17 @@ set formatoptions-=o
 "change tabstop by file, some files like js and html need 2 spaces
 autocmd FileType css        set tabstop=2|set shiftwidth=2
 autocmd FileType javascript set tabstop=2|set shiftwidth=2
-autocmd FileType html       set tabstop=2|set shiftwidth=2|set nowrap
+autocmd FileType php        set tabstop=2|set shiftwidth=2
+autocmd FileType html       set tabstop=2|set shiftwidth=2|set nowrap "html is known to be long, so don't wrap
 
 autocmd FileType java       set tabstop=4|set shiftwidth=4
-autocmd FileType python     set tabstop=4|set shiftwidth=4|set expandtab|set softtabstop=4
+autocmd FileType python     set tabstop=4|set shiftwidth=4|set expandtab|set softtabstop=4 "use spaces for python
 autocmd FileType cpp        set tabstop=4|set shiftwidth=4
 autocmd FileType ruby       set tabstop=4|set shiftwidth=4
+autocmd FileType go         set tabstop=4|set shiftwidth=4
 
-autocmd FileType c          set tabstop=8|set shiftwidth=8
-autocmd FileType cuda       set tabstop=8|set shiftwidth=8
+autocmd FileType c          set tabstop=8|set shiftwidth=8 "linux kernel standard
+autocmd FileType cuda       set tabstop=8|set shiftwidth=8 "^
 
 
 "################# Easy Retabing ###########################################
@@ -123,7 +141,8 @@ map <F9> gg=G<C-o><C-o>
 
 
 "################# Key Mappings ############################################
-"imap jj <Esc>
+imap <C-J> <Esc>
+vmap <C-J> <Esc>
 set timeoutlen=275
 "we have to map some keys for the tabs the hidden command allows us to
 "leave a buffer hidden without having to save the buffer
@@ -147,38 +166,17 @@ set termguicolors
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
-set background=dark
-let g:quantum_black=1
-colorscheme deep-space
+set background=light
+colorscheme monokai-improved
 
 set guicursor=n-v-c:block-Cursor
 set guicursor+=i:ver100-iCursor
 set guicursor+=n-v-c:blinkon1
 set guicursor+=i:blinkwait1
 
-let python_highlight_all=1
+let g:python_highlight_all=1
 let g:javascript_plugin_jsdoc=1
 let g:tagbar_iconchars = ['~ ', '+ ']
-
-"this syntax hilighting is called CSyntaxAfter
-function! CSyntaxAfter()
-	syntax keyword Boolean true false NULL TRUE FALSE
-	syntax keyword Normal sizeof
-	syntax keyword Statement stderr stdin stdout
-
-	syntax match	myBracket "[\[\]]"
-	syntax match	myBlock "[{}]"
-	hi link			myBracket Constant
-
-	syntax match	myOperator display "[-+&|<>=!\/~.,;:*%&^?()@]"
-	syntax region	myComment start="\/\*" end="\*\/"
-	syntax match	myComment "\/\/.*$"
-
-	hi link myOperator Operator
-	hi link myComment Comment
-endfunction
-
-autocmd! FileType c,cpp,java,php call CSyntaxAfter()
 
 "set listchars=tab:│\ ,eol:⌝
 "set list
@@ -210,8 +208,8 @@ let NERDTreeIgnore = ['\.DAT$', '\.LOG1$', '\.LOG1$']
 "toggle back to refresh for errors
 nnoremap <C-T> :NERDTreeToggle <CR> :AirlineToggle <CR> :AirlineToggle <CR>
 
-":silent! set fillchars+=vert:▌
-":set fillchars+=vert:▌
+:silent! set fillchars+=vert:\|
+:set fillchars+=vert:\|
 
 
 "#################### INC Search ###########################################
@@ -257,11 +255,32 @@ endfunction
 "set statusline+=\ %l:%c
 "set statusline+=\
 
+let g:airline_mode_map = {
+      \ '__'     : '###',
+      \ 'c'      : '</>',
+      \ 'i'      : '->>',
+      \ 'ic'     : '=>>',
+      \ 'ix'     : '=>>',
+      \ 'n'      : '-->',
+      \ 'multi'  : '===',
+      \ 'ni'     : '-->',
+      \ 'no'     : '-->',
+      \ 'R'      : '<--',
+      \ 'Rv'     : '<<-',
+      \ 's'      : '***',
+      \ 'S'      : '***',
+      \ ''     : '***',
+      \ 't'      : '~~>',
+      \ 'v'      : '<->',
+      \ 'V'      : '<=>',
+      \ ''     : '<=>',
+      \ }
+
 let g:airline#extensions#tabline#enabled = 0
 let g:airline#extensions#tabline#fnamemod = ':t'
 "instead of the above we will simply use :ls and then :b <buffername>
 let g:airline_powerline_fonts = 1
-let g:airline_theme='deep_space'
+let g:airline_theme='monokai_improved'
 let g:airline_section_b = ' %{gitbranch#name()}'
 let g:airline_section_x = ''
 let g:airline_section_y = '%{&fileencoding?&fileencoding:&encoding} %{&fileformat}'
