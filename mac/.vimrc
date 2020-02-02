@@ -39,6 +39,9 @@ Plugin 'alvan/vim-closetag'
 Plugin 'alexshi0000/monokai-improved'
 Plugin 'uiiaoo/java-syntax.vim'
 Plugin 'tpope/vim-sleuth'
+Plugin 'leafgarland/typescript-vim'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'dense-analysis/ale'
 "Plugin 'python-mode/python-mode'
 "Plugin 'NLKNguyen/papercolor-theme'
 "Plugin 'alexshi0000/gruvbox'
@@ -63,6 +66,7 @@ call vundle#end()
 
 filetype plugin on
 filetype plugin indent on
+:set ff=unix
 
 "some rules for the layout of this file:
 " - each header must be exactly 76 characters long to maintain legibility in
@@ -135,6 +139,9 @@ autocmd FileType go         set tabstop=4|set shiftwidth=4
 autocmd FileType c          set tabstop=8|set shiftwidth=8 "linux kernel standard
 autocmd FileType cuda       set tabstop=8|set shiftwidth=8 "^
 
+"ctrlp ignore certain files
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+
 
 "################# Easy Retabing ###########################################
 map <F9> gg=G<C-o><C-o>
@@ -193,6 +200,7 @@ autocmd BufWinLeave * call clearmatches()
 "############### NERDtree #################################################
 let g:webdevicons_enable = 0
 let g:webdevicons_enable_airline_statusline = 0 "turn off devicons for status bar
+let g:airline#extensions#ale#enabled = 0
 "let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
 let NERDTreeStatusline=''
 let g:NERDTreeWinSize=27
