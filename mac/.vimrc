@@ -109,6 +109,7 @@ set colorcolumn=80
 let &colorcolumn=join(range(81,999),",")
 set omnifunc=syntaxcomplete#Complete
 set relativenumber
+
 "set tabline=2
 
 "keep cursor in the exact same location when leaving or entering buffers
@@ -125,22 +126,26 @@ set formatoptions-=r
 set formatoptions-=o
 
 "change tabstop by file, some files like js and html need 2 spaces
-autocmd FileType css        set tabstop=2|set shiftwidth=2
-autocmd FileType javascript set tabstop=2|set shiftwidth=2
-autocmd FileType php        set tabstop=2|set shiftwidth=2
-autocmd FileType html       set tabstop=2|set shiftwidth=2|set nowrap "html is known to be long, so don't wrap
+autocmd FileType css            set tabstop=2|set shiftwidth=2
+autocmd FileType javascript     set tabstop=2|set shiftwidth=2
+autocmd FileType php            set tabstop=2|set shiftwidth=2
+autocmd FileType html           set tabstop=2|set shiftwidth=2|set nowrap "html is known to be long, so don't wrap
+autocmd FileType typescript.tsx set tabstop=2|set shiftwidth=2|set nowrap "tsx is known to be long, so don't wrap
 
-autocmd FileType java       set tabstop=4|set shiftwidth=4
-autocmd FileType python     set tabstop=4|set shiftwidth=4|set expandtab|set softtabstop=4 "use spaces for python
-autocmd FileType cpp        set tabstop=4|set shiftwidth=4
-autocmd FileType ruby       set tabstop=4|set shiftwidth=4
-autocmd FileType go         set tabstop=4|set shiftwidth=4
+autocmd FileType java           set tabstop=4|set shiftwidth=4
+autocmd FileType python         set tabstop=4|set shiftwidth=4|set expandtab|set softtabstop=4 "use spaces for python
+autocmd FileType cpp            set tabstop=4|set shiftwidth=4
+autocmd FileType ruby           set tabstop=4|set shiftwidth=4
+autocmd FileType go             set tabstop=4|set shiftwidth=4
 
-autocmd FileType c          set tabstop=8|set shiftwidth=8 "linux kernel standard
-autocmd FileType cuda       set tabstop=8|set shiftwidth=8 "^
+autocmd FileType c              set tabstop=8|set shiftwidth=8 "linux kernel standard
+autocmd FileType cuda           set tabstop=8|set shiftwidth=8 "^
 
 "ctrlp ignore certain files
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|venv'
+
+"closetags
+let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.tsx"
 
 
 "################# Easy Retabing ###########################################
@@ -148,8 +153,6 @@ map <F9> gg=G<C-o><C-o>
 
 
 "################# Key Mappings ############################################
-imap <C-J> <Esc>
-vmap <C-J> <Esc>
 set timeoutlen=275
 "we have to map some keys for the tabs the hidden command allows us to
 "leave a buffer hidden without having to save the buffer
@@ -165,6 +168,10 @@ nmap <C-v> "+p
 vmap <C-c> "+y
 
 nmap <C-b> :buffers<CR>:b
+
+"better scrolling
+nmap <C-J> 15<C-E>
+nmap <C-K> 15<C-Y>
 
 
 "################ Eye Candy ################################################
@@ -183,7 +190,11 @@ set guicursor+=i:blinkwait1
 
 let g:python_highlight_all=1
 let g:javascript_plugin_jsdoc=1
+let g:cpp_member_variable_highlight = 1
 let g:tagbar_iconchars = ['~ ', '+ ']
+
+"syntax breaking fix
+autocmd BufEnter * :syntax sync fromstart
 
 "set listchars=tab:│\ ,eol:⌝
 "set list
@@ -201,6 +212,7 @@ autocmd BufWinLeave * call clearmatches()
 let g:webdevicons_enable = 0
 let g:webdevicons_enable_airline_statusline = 0 "turn off devicons for status bar
 let g:airline#extensions#ale#enabled = 0
+let g:ale_completion_enabled = 1
 "let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
 let NERDTreeStatusline=''
 let g:NERDTreeWinSize=27
@@ -216,8 +228,7 @@ let NERDTreeIgnore = ['\.DAT$', '\.LOG1$', '\.LOG1$']
 "toggle back to refresh for errors
 nnoremap <C-T> :NERDTreeToggle <CR> :AirlineToggle <CR> :AirlineToggle <CR>
 
-:silent! set fillchars+=vert:\|
-:set fillchars+=vert:\|
+:set fillchars+=vert:\▏
 
 
 "#################### INC Search ###########################################
