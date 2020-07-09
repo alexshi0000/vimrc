@@ -48,19 +48,9 @@ Plugin 'dense-analysis/ale'
 "Plugin 'alexshi0000/vim-deep-space'
 "Plugin 'jiangmiao/auto-pairs'
 "Plugin 'bling/vim-bufferline'
-"Plugin 'ap/vim-buftabline'
-"Plugin 'rafalbromirski/vim-aurora'
-"Plugin 'w0ng/vim-hybrid'
-"Plugin 'joshdick/onedark.vim'
-"Plugin 'chriskempson/vim-tomorrow-theme'
-"Plugin 'plainfingers/black_is_the_color'
-"Plugin 'AlessandroYorba/Sierra'
-"Plugin 'ayu-theme/ayu-vim'
-"Plugin 'cocopon/iceberg.vim'
-"Plugin 'alexshi0000/nord-vim'
-"Plugin 'AlessandroYorba/Alduin'
-"Plugin 'tyrannicaltoucan/vim-quantum'
-"Plugin 'haishanh/night-owl.vim'
+Plugin 'rking/ag.vim'
+Plugin 'ap/vim-buftabline'
+Plugin 'junegunn/goyo.vim'
 
 call vundle#end()
 
@@ -108,7 +98,7 @@ set foldlevelstart=99
 set colorcolumn=80
 let &colorcolumn=join(range(81,999),",")
 set omnifunc=syntaxcomplete#Complete
-set relativenumber
+set norelativenumber
 
 "set tabline=2
 
@@ -131,6 +121,7 @@ autocmd FileType javascript     set tabstop=2|set shiftwidth=2
 autocmd FileType php            set tabstop=2|set shiftwidth=2
 autocmd FileType html           set tabstop=2|set shiftwidth=2|set nowrap "html is known to be long, so don't wrap
 autocmd FileType typescript.tsx set tabstop=2|set shiftwidth=2|set nowrap "tsx is known to be long, so don't wrap
+autocmd FileType cc             set tabstop=2|set shiftwidth=2 "fucking school assignments use this
 
 autocmd FileType java           set tabstop=4|set shiftwidth=4
 autocmd FileType python         set tabstop=4|set shiftwidth=4|set expandtab|set softtabstop=4 "use spaces for python
@@ -146,6 +137,17 @@ let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|venv'
 
 "closetags
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.tsx"
+
+
+"################# Lint ####################################################
+let g:ale_fixers = {
+ \ 'javascript': ['prettier', 'eslint']
+ \ }
+let g:ale_linters = {'javascript': ['eslint']}
+let g:ale_sign_error = 'x'
+let g:ale_sign_warning = '!'
+let g:ale_fix_on_save = 1
+let g:ale_enabled = 0
 
 
 "################# Easy Retabing ###########################################
@@ -169,9 +171,14 @@ vmap <C-c> "+y
 
 nmap <C-b> :buffers<CR>:b
 
-"better scrolling
+"better scrolling for normal mode and also in visual mode
 nmap <C-J> 15<C-E>
 nmap <C-K> 15<C-Y>
+vmap <C-J> 15<C-E>
+vmap <C-K> 15<C-Y>
+
+"Ag silver filer searcher settings
+nmap <C-F> :Ag ""
 
 
 "################ Eye Candy ################################################
@@ -226,7 +233,7 @@ let NERDTreeMinimalUI=1
 let NERDTreeIgnore = ['\.DAT$', '\.LOG1$', '\.LOG1$']
 
 "toggle back to refresh for errors
-nnoremap <C-T> :NERDTreeToggle <CR> :AirlineToggle <CR> :AirlineToggle <CR>
+nnoremap <C-T> :NERDTreeToggle <CR> :AirlineRefresh <CR>
 
 :set fillchars+=vert:\▏
 
@@ -246,6 +253,28 @@ map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
 
 
+"#################### GOYO #################################################
+nmap <C-G> :Goyo <CR>
+let g:goyo_width = '60%'
+let g:goyo_height = '100%'
+function! s:goyo_enter()
+      let g:buftabline_show=0
+      :call buftabline#update(0)
+      set showtabline=0
+      redraw!
+endfunction
+
+function! s:goyo_leave()
+      let g:buftabline_show=2
+      :call buftabline#update(0)
+      redraw!
+      :AirlineRefresh
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
+
 "################ Vim Airlines #############################################
 function! GitBranch()
 	return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
@@ -258,21 +287,6 @@ endfunction
 function! PWD()
 	return system("pwd 2>/dev/null | tr -d '\n'")
 endfunction
-
-"custom for now
-"set statusline=
-"set statusline+=\ %{WhoAmI()}
-"set statusline+=\ =>
-"set statusline+=\ %{GitBranch()}
-"set statusline+=/
-"set statusline+=%f
-"set statusline+=%m
-"set statusline+=%=
-"set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
-"set statusline+=\ %{&fileformat}
-"set statusline+=\ %p%%
-"set statusline+=\ %l:%c
-"set statusline+=\
 
 let g:airline_mode_map = {
       \ '__'     : '###',
@@ -346,7 +360,7 @@ let g:airline#extensions#default#section_truncate_width = {
 
 "############# BufferLine ##################################################
 let g:airline#extensions#bufferline#overwrite_variables = 0
-let g:airline#extensions#bufferline#enabled = 1 "set to 1 in order to enable
+let g:airline#extensions#bufferline#enabled = 0 "set to 1 in order to enable
 let g:bufferline_active_buffer_left = ''
 let g:bufferline_active_buffer_right = ''
 let g:bufferline_modified = '+'
@@ -355,6 +369,6 @@ let g:bufferline_active_highlight = 'Normal'
 let g:bufferline_solo_highlight = 0
 let g:bufferline_echo = 0
 let g:bufferline_pathshorten = 1
-let g:bufferline_rotate = 0
-let g:bufferline_fname_mod = ':t' "carry leaf name and extention, no path
+let g:bufferline_rotate = 2
+let g:bufferline_fname_mod = '%:p:h:t%:t' "carry leaf name and extention, no path
 let g:bufferline_show_bufnr = 0
