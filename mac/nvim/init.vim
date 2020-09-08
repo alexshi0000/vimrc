@@ -1,4 +1,3 @@
-```vim
 "
 "
 "      _    __ ____ __  ___   ______ ____   _   __ ______ ____ ______
@@ -7,20 +6,7 @@
 "     | |/ /_/ / / /  / /  / /___ / /_/ // /|  // __/  _/ / / /_/ /
 "     |___//___//_/  /_/   \____/ \____//_/ |_//_/    /___/ \____/
 "
-"     - FOR NEOVIM, BY ALEX SHI
 "
-"
-" TODO
-"   - dont forget to fork all of the following plugins
-"   - make changes to the plugins
-"   - change source to my github
-"   - need to add the deep-space color scheme
-"
-" CHANGELOG:
-"   - got rid of some dependencies
-"   - added terminal key shortcuts
-"   - added gruvbox
-"   - installed ctrlp for fuzzy file searching
 "
 "
 "################ Plugins ##################################################
@@ -393,4 +379,3 @@ let g:bufferline_pathshorten = 1
 let g:bufferline_rotate = 2
 let g:bufferline_fname_mod = '%:p:h:t%:t' "carry leaf name and extention, no path
 let g:bufferline_show_bufnr = 0
-```
