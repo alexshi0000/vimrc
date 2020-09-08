@@ -1,3 +1,6 @@
 # dont track plugins from both vanilla vim and also neovim
 .vim/bundle/
 nvim/bundle/
+.git/
+.git/*
+.git*
